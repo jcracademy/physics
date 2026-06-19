@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ফিজিক্স মাস্টার - পদার্থবিজ্ঞান অনলাইন এক্সাম</title>
-    <!-- Bootstrap 5 CSS CDN -->
+    <title>Physics World - JCR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <!-- Three.js CDN -->
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body { 
@@ -40,7 +39,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* ব্যাকগ্রাউন্ডে থাকবে */
+            z-index: 1;
         }
 
         /* Subtle Overlay to make text pop */
@@ -50,14 +49,14 @@
             left: 0;
             height: 100%;
             width: 100%;
-            background: linear-gradient(to bottom, rgba(2,6,23,0.4), rgba(2,6,23,0.8));
+            background: linear-gradient(to bottom, rgba(2,6,23,0.3), rgba(2,6,23,0.85));
             z-index: 2;
         }
 
         /* Hero Content */
         .hero-content {
             position: relative;
-            z-index: 3; /* টেক্সট থাকবে সবার ওপরে */
+            z-index: 3;
         }
 
         .stats-card {
@@ -69,6 +68,8 @@
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
             background: #ffffff;
         }
+        
+        /* প্রিমিয়াম কোর্স কার্ড ডিজাইন */
         .premium-card {
             border: 1px solid #e2e8f0;
             border-radius: 24px;
@@ -82,16 +83,136 @@
             border-color: #3b82f6;
         }
         .card-icon-box {
-            width: 56px;
             height: 56px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.5rem;
-            margin-bottom: 24px;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
         }
+        
+        /* курс инфо лист */
+        .course-info-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .course-info-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* পড়ানোর কৌশল সেকশন স্টাইল */
+        .strategy-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .strategy-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.05);
+            transform: translateY(-2px);
+        }
+        .strategy-number {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 👑 প্রফেশনাল ও আধুনিক যোগাযোগ সেকশন স্টাইল */
+        .contact-section-bg {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .contact-premium-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 32px;
+            box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            position: relative;
+        }
+        .contact-premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+        }
+        .avatar-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto;
+        }
+        .avatar-ripple {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .avatar-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            z-index: 2;
+        }
+        .contact-info-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 16px 20px;
+            transition: all 0.3s ease;
+        }
+        .contact-info-block:hover {
+            background: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.08);
+        }
+        .icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        .btn-call-now {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -5px rgba(29, 78, 216, 0.4);
+        }
+        .btn-call-now:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(29, 78, 216, 0.5);
+        }
+
         html {
             scroll-behavior: smooth;
         }
@@ -99,7 +220,6 @@
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark custom-nav sticky-top py-3 border-b border-secondary border-opacity-10">
         <div class="container">
             <a class="navbar-brand fw-extrabold fs-3 text-white d-flex align-items-center gap-2" href="#">
@@ -113,22 +233,19 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-semibold me-4 gap-2">
                     <li class="nav-item"><a class="nav-link text-primary active" href="#">হোম</a></li>
                     <li class="nav-item"><a class="nav-link text-white-50" href="#classes">কোর্সসমূহ</a></li>
-                    <li class="nav-item"><a class="nav-link text-white-50" href="#leaderboard">Live Exam</a></li>
+                    <li class="nav-item"><a class="nav-link text-white-50" href="#strategies">আমাদের কৌশল</a></li>
                     <li class="nav-item"><a class="nav-link text-white-50" href="#contact">যোগাযোগ</a></li>
                 </ul>
-                <button class="btn btn-primary px-4 py-2.5 rounded-3 fw-bold shadow-lg">
+                <a href="register.html" class="btn btn-primary px-4 py-2.5 rounded-3 fw-bold shadow-lg">
                     লগইন / রেজিস্টার
-                </button>
+                </a>
             </div>
         </div>
     </nav>
 
-    <!-- Three.js Hero Section -->
     <header class="hero-section text-center">
-        <!-- Three.js Canvas Container -->
         <div id="three-canvas-container"></div>
         
-        <!-- Overlay -->
         <div class="hero-overlay"></div>
         
         <div class="container hero-content">
@@ -138,10 +255,10 @@
                         🚀 এবার পদার্থবিজ্ঞান হবে আরও সহজ!
                     </span>
                     <h1 class="display-4 fw-black text-white mb-4 lh-sm">
-                        পদার্থবিজ্ঞানের গাণিতিক সমস্যায় <br><span class="text-primary">আর কোনো ভয় নয়!</span>
+                        পদার্থবিজ্ঞানের গাণিতিক সমস্যায় <br><span class="text-primary">আর কোনো ভয় নয়!</span>
                     </h1>
                     <p class="fs-5 text-light mx-auto mb-5 text-opacity-75" style="max-width: 650px;">
-                        SSC এবং HSC শিক্ষার্থীদের জন্য অধ্যায়ভিত্তিক জটিল সব গাণিতিক প্রশ্নের সহজ ব্যাখ্যা, শর্টকাট টেকনিক এবং লাইভ এক্সাম প্ল্যাটফর্ম।
+                        SSC এবং HSC শিক্ষার্থীদের জন্য অধ্যায়ভিত্তিক জটিল সব গাণিতিক প্রশ্নের সহজ ব্যাখ্যা, শর্টকাট টেকনিক এবং লাইভ এক্সাম প্ল্যাটফর্ম।
                     </p>
                     <div class="d-flex justify-content-center gap-3 flex-column flex-sm-row">
                         <a href="#classes" class="btn btn-primary btn-lg px-5 py-3 fw-bold rounded-3 shadow">শুরু করো ফ্রিতে</a>
@@ -152,7 +269,6 @@
         </div>
     </header>
 
-    <!-- Stats Section -->
     <section class="container">
         <div class="card stats-card p-4 py-5">
             <div class="row text-center g-4">
@@ -170,88 +286,121 @@
                 </div>
                 <div class="col-6 col-md-3 border-start-md border-slate-100">
                     <h2 class="fw-bold text-warning mb-1">১০,০০০+</h2>
-                    <p class="text-muted small fw-semibold mb-0 text-uppercase tracking-wider">সক্রিয় শিক্ষার্থী</p>
+                    <p class="text-muted small fw-semibold mb-0 text-uppercase tracking-wider">সক্রিয় শিক্ষার্থী</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Class Selection Section (বাকি অংশ একই থাকবে) -->
     <section id="classes" class="py-5 container mt-4">
         <div class="text-center mb-5">
-            <h2 class="fw-bold text-dark display-6">তোমার শ্রেণি নির্বাচন করো</h2>
-            <p class="text-muted">উভয় ক্লাসের জন্য আলাদা ও গোছানো প্রশ্নব্যাংক</p>
+            <h2 class="fw-bold text-dark display-6">আমাদের কোর্স সমূহ</h2>
+            <p class="text-muted">তোমার কাঙ্ক্ষিত কোর্সটি বেছে নিয়ে আজই প্রস্তুতি শুরু করো</p>
         </div>
         
         <div class="row justify-content-center g-4">
-            <!-- SSC Card -->
             <div class="col-md-6 col-lg-5">
                 <div class="card premium-card h-100 d-flex flex-column justify-content-between">
                     <div class="card-body p-4 p-lg-5">
-                        <div class="card-icon-box bg-primary bg-opacity-10 text-primary">S</div>
-                        <h3 class="card-title fw-bold text-dark mb-3">SSC (নবম-দশম শ্রেণি)</h3>
-                        <p class="text-muted mb-4 lh-base">বেসিক ক্লিয়ারিং ম্যাথ এবং বিগত বছরের বোর্ড পরীক্ষার গাণিতিক প্রশ্নের সমাধান।</p>
-                        <ul class="list-unstyled text-secondary lh-lg mb-0 fw-medium">
-                            <li class="mb-2">⏱ গতি ও বলের অধ্যায়</li>
-                            <li class="mb-2">⚡ কাজ, ক্ষমতা ও শক্তি</li>
-                            <li>🌊 তরঙ্গ ও শব্দ</li>
+                        <div class="card-icon-box bg-primary bg-opacity-10 text-primary">🎒 SSC Physics Master Pack</div>
+                        
+                        <ul class="list-unstyled text-secondary course-info-list fw-medium mb-0">
+                            <li>
+                                <strong class="text-dark">💰 কোর্স ফি:</strong> 
+                                <span class="text-primary fw-bold fs-5 ms-1">৫০০০ টাকা</span>
+                            </li>
+                            <li>
+                                <strong class="text-dark">⏳ কোর্স মেয়াদ:</strong> 
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1"> ০৩ মাস মেয়াদি</span>
+                            </li>
+                            <li>
+                                <strong class="text-dark">📖 কোর্সে কী শেখানো হয়:</strong>
+                                <p class="small text-muted mt-2 mb-0 lh-base">
+                                    একদম বেসিক বা শূন্য থেকে শুরু করে পদার্থবিজ্ঞানের জটিল জটিল ম্যাথ গুলোর সহজ সমাধান কৌশল শেখানো হয়। বোর্ডের সৃজনশীল প্রশ্ন (CQ) এবং বহুনির্বাচনী (MCQ) এর নিখুঁত ব্যবচ্ছেদসহ টেস্ট পেপার সলভ করানো হয়।
+                                </p>
+                            </li>
                         </ul>
                     </div>
                     <div class="p-4 p-lg-5 pt-0 bg-transparent border-0">
-                        <button class="btn btn-primary w-100 py-3 fw-bold rounded-3">SSC প্রশ্নব্যাংক প্রবেশ করো</button>
+                        <a href="#contact" class="btn btn-primary w-100 py-3 fw-bold rounded-3">ভর্তি হতে ইচ্ছুক 🤝</a>
                     </div>
                 </div>
             </div>
 
-            <!-- HSC Card -->
             <div class="col-md-6 col-lg-5">
                 <div class="card premium-card h-100 d-flex flex-column justify-content-between">
                     <div class="card-body p-4 p-lg-5">
-                        <div class="card-icon-box bg-info bg-opacity-10 text-info">H</div>
-                        <h3 class="card-title fw-bold text-dark mb-3">HSC (একাদশ-দ্বাদশ শ্রেণি)</h3>
-                        <p class="text-muted mb-4 lh-base">কনসেপ্ট ভিত্তিক কঠিন ম্যাথ, ইঞ্জিনিয়ারিং ও বিশ্ববিদ্যালয় অ্যাডমিশন টেস্টের প্রশ্নের কালেকশন।</p>
-                        <ul class="list-unstyled text-secondary lh-lg mb-0 fw-medium">
-                            <li class="mb-2">📐 ভেক্টর ও নিউটনীয় বলবিদ্যা</li>
-                            <li class="mb-2">🔥 তাপগতিবিদ্যা ও আদেশ গ্যাস</li>
-                            <li>💡 স্থির ও চল তড়িৎ</li>
+                        <div class="card-icon-box bg-info bg-opacity-10 text-info">🚀 HSC Ultimate Physics Solution</div>
+                        
+                        <ul class="list-unstyled text-secondary course-info-list fw-medium mb-0">
+                            <li>
+                                <strong class="text-dark">💰 কোর্স ফি:</strong> 
+                                <span class="text-info fw-bold fs-5 ms-1">৬০০০ টাকা</span>
+                            </li>
+                            <li>
+                                <strong class="text-dark">⏳ কোর্স মেয়াদ:</strong> 
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1">০৩ মাস মেয়াদি</span>
+                            </li>
+                            <li>
+                                <strong class="text-dark">📖 কোর্সে কী শেখানো হয়:</strong>
+                                <p class="small text-muted mt-2 mb-0 lh-base">
+                                    পদার্থবিজ্ঞান ১ম ও ২য় পত্রের গভীর গাণিতিক কনসেপ্ট, টাইপভিত্তিক কঠিন কঠিন গাণিতিক সমস্যা সমাধান, শর্টকাট হ্যাকস এবং একই সাথে বোর্ড পরীক্ষার পাশাপাশি বুয়েট, মেডিকেল ও বিশ্ববিদ্যালয় ভর্তি যুদ্ধের অ্যাডভান্সড বেসিক শেখানো হয়।
+                                </p>
+                            </li>
                         </ul>
                     </div>
                     <div class="p-4 p-lg-5 pt-0 bg-transparent border-0">
-                        <button class="btn btn-info text-white w-100 py-3 fw-bold rounded-3">HSC প্রশ্নব্যাংক প্রবেশ করো</button>
+                        <a href="#contact" class="btn btn-info text-white w-100 py-3 fw-bold rounded-3">ভর্তি হতে ইচ্ছুক 🤝</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-5 bg-light">
+    <section id="strategies" class="py-5 bg-white border-top border-bottom border-light">
         <div class="container py-4">
             <div class="text-center mb-5">
-                <h2 class="fw-bold text-dark display-6">যোগাযোগ করুন</h2>
-                <p class="text-muted">ভর্তি সংক্রান্ত বা যেকোনো প্রয়োজনে সরাসরি যোগাযোগ করো</p>
+                <h2 class="fw-bold text-dark display-6">আমাদের পড়ানোর কৌশলসমূহ</h2>
+                <p class="text-muted">একটি গোছানো এবং আধুনিক পদ্ধতিতে আমরা শিক্ষার্থীদের সফলতার দিকে নিয়ে যাই</p>
             </div>
-            <div class="row justify-content-center">
+
+            <div class="row g-4 justify-content-center">
                 <div class="col-md-6 col-lg-5">
-                    <div class="card border-0 shadow-sm p-4 text-center rounded-4 bg-white" style="border: 1px solid #e2e8f0 !important;">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; font-size: 1.8rem;">👨‍🏫</div>
-                        <h4 class="fw-bold text-dark mb-1">Jiten Sir</h4>
-                        <p class="text-primary fw-semibold mb-4">Master on পদার্থবিজ্ঞান</p>
-                        <div class="border-top pt-4 text-start">
-                            <div class="d-flex align-items-center gap-3 mb-3">
-                                <span class="fs-4 text-primary">📞</span>
-                                <div>
-                                    <p class="text-muted small mb-0">মোবাইল নম্বর</p>
-                                    <a href="tel:01746310120" class="fw-bold text-dark text-decoration-none fs-5">01746310120</a>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="fs-4 text-primary">📍</span>
-                                <div>
-                                    <p class="text-muted small mb-0">ঠিকানা</p>
-                                    <p class="fw-bold text-dark mb-0 fs-5">Pirganj, Thakurgaon.</p>
-                                </div>
-                            </div>
+                    <div class="d-flex align-items-start strategy-card p-4 gap-3 h-100">
+                        <div class="strategy-number flex-shrink-0">১</div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-2">অধ্যায় ভিত্তিক নোটশিট</h5>
+                            <p class="text-secondary mb-0 small lh-base">প্রতিটি ক্লাসের শেষে অত্যন্ত নিখুঁত এবং গোছানো অধ্যায়ভিত্তিক স্পেশাল নোটশিট প্রদান করা হয়, যা রিভিশনে দারুণ সাহায্য করে।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-5">
+                    <div class="d-flex align-items-start strategy-card p-4 gap-3 h-100">
+                        <div class="strategy-number flex-shrink-0">২</div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-2">টাইপভিত্তিক সুনির্দিষ্ট আলোচনা</h5>
+                            <p class="text-secondary mb-0 small lh-base">প্রতিটি অধ্যায়কে ১০-১৫ টি সুনির্দিষ্ট টাইপে বিভক্ত করে আলোচনা করা হয়, যাতে কোনো টপিক বাদ না পড়ে এবং সব নিয়ম মাথায় থাকে।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-5">
+                    <div class="d-flex align-items-start strategy-card p-4 gap-3 h-100">
+                        <div class="strategy-number flex-shrink-0">৩</div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-2">বেসিক টু অ্যাডভান্সড ও শর্টকাট টেকনিক</h5>
+                            <p class="text-secondary mb-0 small lh-base">একদম বেসিক থেকে শুরু করে জটিল ম্যাথগুলো সহজভাবে শেখানো হয়। গাণিতিক সমস্যা দ্রুত সমাধানের জন্য প্রতি টাইপের স্পেশাল শর্টকাট টেকনিক শেখানো হয়।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-5">
+                    <div class="d-flex align-items-start strategy-card p-4 gap-3 h-100">
+                        <div class="strategy-number flex-shrink-0">৪</div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-2">ভর্তি যুদ্ধের দীর্ঘমেয়াদী প্রস্তুতি</h5>
+                            <p class="text-secondary mb-0 small lh-base">কেবল পরীক্ষায় পাস বা A+ পাওয়া আমাদের একমাত্র টার্গেট নয়, আমাদের মূল লক্ষ্য হলো আগামীর কঠিন ভর্তি যুদ্ধের জন্য এখন থেকেই বেসিক শক্ত করে প্রস্তুতি নেওয়া।</p>
                         </div>
                     </div>
                 </div>
@@ -259,18 +408,75 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- 👑 New Premium Contact Section -->
+    <section id="contact" class="py-5 contact-section-bg">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold mb-2">Get In Touch</span>
+                <h2 class="fw-bold text-dark display-6">যোগাযোগ করুন</h2>
+                <p class="text-muted mx-auto" style="max-width: 500px;">ভর্তি সংক্রান্ত যেকোনো তথ্যের জন্য সরাসরি আমাদের মেন্টরের সাথে बात বলো</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-7 col-lg-5">
+                    <div class="card contact-premium-card p-4 p-sm-5 text-center">
+                        
+                        <!-- Avatar Icon with Animated Rings -->
+                        <div class="avatar-container mb-4">
+                            <div class="avatar-ripple"></div>
+                            <!-- এখানেও ইমোজির বদলে টিচার আইকন দেওয়া হয়েছে -->
+                            <div class="avatar-box"><i class="bi bi-person-workspace"></i></div>
+                        </div>
+                        
+                        <!-- Name & Designation -->
+                        <h3 class="fw-bold text-dark mb-1">Jiten Sir</h3>
+                        <p class="text-primary fw-semibold small text-uppercase tracking-wider mb-4">Master of Physics</p>
+                        
+                        <!-- Contact Details Blocks -->
+                        <div class="d-flex flex-column gap-3 mb-4 text-start">
+                            
+                            <!-- Mobile Block -->
+                            <div class="d-flex align-items-center gap-3 contact-info-block">
+                                <!-- বুটস্ট্র্যাপ কল আইকন (bi-telephone-fill) -->
+                                <div class="icon-badge bg-primary bg-opacity-10 text-primary"><i class="bi bi-telephone-fill"></i></div>
+                                <div>
+                                    <span class="text-muted d-block small mb-0">সরাসরি ফোন করো</span>
+                                    <a href="tel:01746310120" class="fw-bold text-dark text-decoration-none fs-5">01746310120</a>
+                                </div>
+                            </div>
+                            
+                            <!-- Address Block (লোকেশন আইকন) -->
+                            <div class="d-flex align-items-center gap-3 contact-info-block">
+                                <!-- বুটস্ট্র্যাপ লোকেশন আইকন (bi-geo-alt-fill) -->
+                                <div class="icon-badge bg-success bg-opacity-10 text-success"><i class="bi bi-geo-alt-fill"></i></div>
+                                <div>
+                                    <span class="text-muted d-block small mb-0">আমাদের ঠিকানা</span>
+                                    <p class="fw-bold text-dark mb-0 fs-5">শান্তিবাগ মাঠ সংলগ্ন উত্তরণ প্রাইভেট সেন্টার, পীরগঞ্জ, ঠাকুরগাঁও</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- Premium Action Button -->
+                        <a href="tel:01746310120" class="btn btn-call-now w-100 py-3 fw-bold rounded-3">
+                            <i class="bi bi-lightning-fill me-2"></i>এখনই কল করো
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="text-muted py-5 text-center" style="background-color: #020617;">
         <div class="container">
             <p class="fw-bold text-white mb-2 fs-5">PhysicsMaster &copy; 2026</p>
-            <p class="small text-secondary mb-0">পদার্থবিজ্ঞান শিক্ষার্থীদের অনলাইন মূল্যায়নের নির্ভরযোগ্য প্ল্যাটফর্ম।</p>
+            <p class="small text-secondary mb-0">পদার্থবিজ্ঞান শিক্ষার্থীদের অনলাইন মূল্যায়নের নির্ভরযোগ্য প্ল্যাটফর্ম।</p>
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Three.js JavaScript Code -->
     <script>
         const container = document.getElementById('three-canvas-container');
         
@@ -278,65 +484,97 @@
         const scene = new THREE.Scene();
         
         // 2. Camera Setup
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.z = 5;
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(0, 4, 8);
+        camera.lookAt(0, 0, 0);
 
         // 3. Renderer Setup
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // 4. Create Abstract Space/Solar Particles
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 1500; // কতগুলো কণা থাকবে
+        // 4. Galaxy Swirl Parameters
+        const parameters = {
+            count: 2500,
+            size: 0.03,
+            radius: 5,
+            branches: 3,
+            spin: 1.5,
+            randomness: 0.4,
+            power: 4,
+            insideColor: '#3b82f6', 
+            outsideColor: '#1d4ed8' 
+        };
 
-        const posArray = new Float32Array(particlesCount * 3);
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(parameters.count * 3);
+        const colors = new Float32Array(parameters.count * 3);
 
-        for(let i=0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 10; // কণাগুলোর ছড়ানো পজিশন
+        const colorInside = new THREE.Color(parameters.insideColor);
+        const colorOutside = new THREE.Color(parameters.outsideColor);
+
+        for(let i = 0; i < parameters.count; i++) {
+            const i3 = i * 3;
+            const radius = Math.random() * parameters.radius;
+            const spinAngle = radius * parameters.spin;
+            const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+
+            const randomX = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+            const randomY = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+            const randomZ = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+
+            positions[i3    ] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+            positions[i3 + 1] = randomY; 
+            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+            const mixedColor = colorInside.clone();
+            mixedColor.lerp(colorOutside, radius / parameters.radius);
+
+            colors[i3    ] = mixedColor.r;
+            colors[i3 + 1] = mixedColor.g;
+            colors[i3 + 2] = mixedColor.b;
         }
 
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-        // Material for particles
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.02,
-            color: '#3b82f6', // ফিজিক্স থিমের নীল রঙ
+        const material = new THREE.PointsMaterial({
+            size: parameters.size,
+            sizeAttenuation: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexColors: true,
             transparent: true,
-            blending: THREE.AdditiveBlending
+            opacity: 0.85
         });
 
-        // Mesh
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
+        const galaxy = new THREE.Points(geometry, material);
+        scene.add(galaxy);
 
-        // Mouse Move Interaction
         let mouseX = 0;
         let mouseY = 0;
-
         document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX / window.innerWidth - 0.5;
-            mouseY = event.clientY / window.innerHeight - 0.5;
+            mouseX = (event.clientX / window.innerWidth) - 0.5;
+            mouseY = (event.clientY / window.innerHeight) - 0.5;
         });
 
-        // 5. Animation Loop
+        const clock = new THREE.Clock();
+
         const animate = () => {
+            const elapsedTime = clock.getElapsedTime();
             requestAnimationFrame(animate);
 
-            // অটোমেটিক ঘূর্ণন (Rotation)
-            particlesMesh.rotation.y += 0.002;
-            particlesMesh.rotation.x += 0.001;
-
-            // মাউসের মুভমেন্ট অনুযায়ী হালকা নড়াচড়া
-            particlesMesh.rotation.y += mouseX * 0.05;
-            particlesMesh.rotation.x += -mouseY * 0.05;
+            galaxy.rotation.y = elapsedTime * 0.08;
+            
+            galaxy.rotation.x = mouseY * 0.3;
+            galaxy.rotation.z = mouseX * 0.3;
 
             renderer.render(scene, camera);
         };
 
         animate();
 
-        // Window Resize Handling
         window.addEventListener('resize', () => {
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
