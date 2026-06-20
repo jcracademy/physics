@@ -15,7 +15,7 @@
             color: #0f172a;
             min-height: 100vh;
         }
-        /* প্রফেশনাল গ্রেডিয়েন্ট টপ নেভিগেশন */
+        /* প্রফেশনাল গ্রেডিয়েন্ট টপ নেভিগেশন */
         .dashboard-nav {
             background: linear-gradient(135deg, #0f172a, #1e293b);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -98,7 +98,6 @@
 </head>
 <body>
 
-    <!-- Topbar (Navbar) -->
     <nav class="navbar navbar-expand-lg dashboard-nav py-3 sticky-top">
         <div class="container">
             <a class="navbar-brand fw-black fs-4 text-white d-flex align-items-center gap-2" href="#">
@@ -113,13 +112,11 @@
     </nav>
 
     <div class="container py-5">
-        <!-- স্বাগতম বক্স -->
         <div class="welcome-box p-4 p-md-5 mb-5 text-center text-md-start shadow-sm">
             <h2 class="fw-bold mb-2">স্বাগতম, <span class="text-primary" id="welcomeStudentName">শিক্ষার্থী</span>! 👋</h2>
             <p class="text-secondary mb-0">আজ তুমি পদার্থবিজ্ঞান বইয়ের কোন অধ্যায়টি পড়তে চাও? নিচে থেকে তোমার কোর্সটি নির্বাচন করো।</p>
         </div>
 
-        <!-- ক্লাস সিলেকশন সেকশন -->
         <div class="row g-4 justify-content-center mb-4">
             <div class="col-md-6 col-lg-5">
                 <div class="card class-select-card p-4 text-center shadow-sm" id="sscCard" onclick="selectClass('SSC')">
@@ -137,7 +134,6 @@
             </div>
         </div>
 
-        <!-- পেপার সিলেকশন সেকশন -->
         <div id="paperSection" class="text-center mb-5" style="display: none;">
             <p class="text-muted small fw-bold mb-3">পত্র নির্বাচন করো</p>
             <div class="d-flex justify-content-center gap-2">
@@ -146,7 +142,6 @@
             </div>
         </div>
 
-        <!-- চ্যাপ্টার লিস্ট ডিসপ্লে সেকশন -->
         <div id="chapterSection" style="display: none;">
             <div class="border-top border-secondary pt-5 mb-4">
                 <h3 class="fw-bold text-dark mb-1">📖 <span id="selectedClassText" class="text-primary"></span> শ্রেণি — <span id="selectedPaperText" class="text-muted"></span> অধ্যায়সমূহ</h3>
@@ -173,22 +168,26 @@
         document.getElementById('navStudentName').innerText = studentName;
         document.getElementById('welcomeStudentName').innerText = studentName;
 
-        // ⚠️ আপনার গুগল অ্যাপস স্ক্রিপ্টের New Deployment URL টি এখানে দিন
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTXhfGSa8Eanzxp9ltJNj8v7iEWeOy1R_n7ABN_awl7Tf_0D54OY8vjVZRThMjc0C9/exec";
 
-        // গ্লোবাল মেমোরি অবজেক্ট (Client-side Cache)
-        let serverChaptersCache = [];
+        // গ্লোবাল মেমোরি ক্যাশ (এখন localStorage-এর পরিবর্তে sessionStorage থেকে রিড করবে)
+        let serverChaptersCache = JSON.parse(sessionStorage.getItem("cachedChaptersList")) || [];
         let currentSelectedClass = "";
         let currentSelectedPaper = "1st"; 
-        let isDataLoaded = false;
+        let isDataLoaded = serverChaptersCache.length > 0; // সেশনে ডেটা অলরেডি থাকলে true হবে
 
-        // পেজ লোড হওয়ার সাথে সাথে একবারই সার্ভার থেকে সম্পূর্ণ ব্যাকএন্ড ডাটা পুশ করে রাখা হবে
         window.addEventListener('DOMContentLoaded', () => {
             preloadAllChaptersFromServer();
         });
 
-        // ১. সার্ভার থেকে সম্পূর্ণ ডেটা একসাথে আনার মেথড
+        // ১. sessionStorage মেকানিজম সহ ডাটা লোড মেথড
         function preloadAllChaptersFromServer() {
+            // যদি কারেন্ট সেশনে (ট্যাবে) অলরেডি ডাটা থাকে, তবে নতুন করে fetch হবে না
+            if (isDataLoaded) {
+                console.log("ডাটা ইতিমধ্যে sessionStorage-এ আছে। পেজ রিফ্রেশ করলেও সার্ভার রিকোয়েস্ট যাবে না।");
+                return;
+            }
+
             const loading = document.getElementById('chaptersLoading');
             const section = document.getElementById('chapterSection');
             
@@ -201,15 +200,22 @@
                 loading.style.display = 'none';
                 section.style.display = 'none';
                 if (data.result === "success") {
-                    serverChaptersCache = data.chapters; // সম্পূর্ণ অ্যারে মেমোরিতে স্টোর হলো
+                    serverChaptersCache = data.chapters;
                     isDataLoaded = true;
-                    console.log("সার্ভার থেকে সব অধ্যায়ের ডাটা ব্রাউজারে ক্যাশ করা হয়েছে!");
+                    
+                    // ডাটা sessionStorage-এ সেভ করা হলো (ট্যাব ক্লোজ করলে মুছে যাবে, রিফ্রেশে থাকবে)
+                    sessionStorage.setItem("cachedChaptersList", JSON.stringify(data.chapters));
+                    console.log("সার্ভার থেকে প্রথমবার ডাটা এনে sessionStorage-এ ক্যাশ করা হয়েছে!");
+                    
+                    if(currentSelectedClass) {
+                        renderChaptersFromCache();
+                    }
                 }
             })
             .catch(err => {
                 loading.style.display = 'none';
-                console.error("ডাটা প্রিলোড করতে সমস্যা হয়েছে:", err);
-                Swal.fire('Error', 'সার্ভার থেকে ডাটা প্রিলোড করা যায়নি। পেজটি রিফ্রেশ করুন।', 'error');
+                console.error("ডাটা প্রিলোড করতে সমস্যা হয়েছে:", err);
+                Swal.fire('Error', 'সার্ভার থেকে ডাটা প্রিলোড করা যায়নি। পেজটি রিফ্রেশ করুন।', 'error');
             });
         }
 
@@ -223,7 +229,7 @@
             if (className === 'SSC') {
                 document.getElementById('sscCard').classList.add('active-card');
                 document.getElementById('paperSection').style.display = 'none';
-                currentSelectedPaper = "1st"; // SSC এর জন্য ডিফল্ট ১ম পত্র (বা নো পেপার)
+                currentSelectedPaper = "1st"; 
             } else {
                 document.getElementById('hscCard').classList.add('active-card');
                 document.getElementById('paperSection').style.display = 'block';
@@ -248,7 +254,7 @@
             renderChaptersFromCache();
         }
 
-        // ৪. কাস্টম রেন্ডারার ফাংশন (যা কোনো নেটওয়ার্ক কল ছাড়াই ক্যাশ থেকে ইনস্ট্যান্ট ডেটা দেখাবে)
+        // ৪. কাস্টম রেন্ডারার ফাংশন (যা সেশন স্টোরেজ থেকে ইনস্ট্যান্ট ডেটা দেখাবে)
         function renderChaptersFromCache() {
             const container = document.getElementById('chaptersContainer');
             const section = document.getElementById('chapterSection');
@@ -260,14 +266,13 @@
             container.innerHTML = "";
             section.style.display = 'block';
 
-            // ডাটা লোড না হওয়া পর্যন্ত লোডিং দেখাবে, নতুন কোনো সার্ভার কল করবে না
             if (!isDataLoaded) {
                 loading.style.display = 'block';
                 return;
             }
             loading.style.display = 'none';
 
-            // ব্রাউজারের মেমোরি (Cache) থেকে রিয়েল-টাইম ফিল্টারিং
+            // সেশন মেমোরি থেকে রিয়েল-টাইম ফিল্টারিং
             const finalFiltered = serverChaptersCache.filter(ch => {
                 const rowClass = ch.className ? ch.className.toLowerCase() : "";
                 const matchClass = rowClass === currentSelectedClass.toLowerCase();
@@ -308,7 +313,7 @@
         }
 
         function logout() {
-            sessionStorage.clear();
+            sessionStorage.clear(); // লগআউট করলে চ্যাপ্টার লিস্ট ক্যাশ এবং ইউজার সেশন একসাথে ডিলেট হয়ে যাবে
             window.location.href = "register.html";
         }
     </script>
