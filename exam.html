@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhysicsMaster - Exam Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans Bengali', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .exam-header-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        .timer-badge {
+            font-size: 1.25rem;
+            background-color: #ef4444;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        .q-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+        .mcq-option {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mcq-option:hover {
+            background-color: #f8fafc;
+            border-color: #3b82f6;
+        }
+        .mcq-radio:checked + .mcq-option-text {
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .written-textarea {
+            border: 1px dashed #94a3b8;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            resize: vertical;
+        }
+        .written-textarea:focus {
+            background-color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-4">
+        <div class="exam-header-card p-4 mb-4 text-center text-sm-start d-sm-flex align-items-center justify-content-between">
+            <div>
+                <span class="badge bg-primary mb-2 text-uppercase fw-bold">Live Board Standard Exam</span>
+                <h2 class="fw-bold mb-1" id="examTitle">পদার্থবিজ্ঞান ১ম পত্র: গতিবিদ্যা</h2>
+                <p class="text-white-50 mb-0 small"><i class="bi bi-info-circle"></i> মোট প্রশ্ন: ৫০টি (MCQ) + ১০টি (Written)</p>
+            </div>
+            <div class="mt-3 mt-sm-0 text-center">
+                <div class="text-white-50 small mb-1 fw-bold"><i class="bi bi-alarm"></i> অবশিষ্ট সময়</div>
+                <span class="badge timer-badge px-4 py-2.5 rounded-3 fw-bold" id="examTimer">60:00</span>
+            </div>
+        </div>
+
+        <div id="examLoader" class="text-center py-5">
+            <div class="spinner-border text-dark" role="status"></div>
+            <p class="mt-2 text-muted">গুগল শিট থেকে প্রশ্নপত্র তৈরি হচ্ছে...</p>
+        </div>
+
+        <form id="examForm" style="display: none;" onsubmit="submitExam(event)">
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    <div class="mb-5">
+                        <h4 class="fw-black text-dark mb-4 border-bottom pb-2 text-primary"><i class="bi bi-list-check"></i> অংশ ১: বহুনির্বাচনী প্রশ্ন (MCQ)</h4>
+                        <div id="mcqContainer"></div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h4 class="fw-black text-dark mb-4 border-bottom pb-2 text-success"><i class="bi bi-pencil-square"></i> অংশ ২: সিজনশীল/সংক্ষিপ্ত লিখিত প্রশ্ন (Written)</h4>
+                        <div id="writtenContainer"></div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card p-4 border-dark sticky-top" style="top: 20px; z-index: 10;">
+                        <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-shield-check"></i> পরীক্ষা সাবমিশন</h5>
+                        <p class="text-muted small">সব প্রশ্নের উত্তর নিশ্চিত করার পর নিচের ফাইনাল সাবমিট বাটনে ক্লিক করো। সময় শেষ হলে অটো-সাবমিট হয়ে যাবে।</p>
+                        <hr>
+                        <button type="submit" class="btn btn-dark btn-lg w-100 fw-bold py-3 rounded-3 shadow">
+                            <i class="bi bi-cloud-arrow-up-fill"></i> ফাইনাল সাবমিট করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const chapterId = urlParams.get('ch') || 'hsc_1st_ch2';
+        
+        // আপনার আগের Apps Script URL টি এখানে বসাবেন
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTXhfGSa8Eanzxp9ltJNj8v7iEWeOy1R_n7ABN_awl7Tf_0D54OY8vjVZRThMjc0C9/exec";
+
+        let examDurationSeconds = 60 * 60; // ৬০ মিনিট
+        let timerInterval;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadExamQuestions();
+        });
+
+        function loadExamQuestions() {
+            // শিট থেকে এক্সাম ডাটা আনার ফেচ কল (একশনটি আপনার ব্যাকএন্ডে হ্যান্ডেল করতে হবে)
+            fetch(`${SCRIPT_URL}?action=getExamQuestions&chId=${chapterId}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.result === "success" && data.questions.length > 0) {
+                    
+                    const mcqContainer = document.getElementById('mcqContainer');
+                    const writtenContainer = document.getElementById('writtenContainer');
+                    
+                    let mcqCount = 0;
+                    let writtenCount = 0;
+
+                    data.questions.forEach((q, index) => {
+                        let imgHTML = q.qImg ? `<div class="my-2"><img src="${q.qImg}" class="img-fluid rounded border" style="max-height:180px;"></div>` : "";
+                        
+                        if(q.qType === 'mcq') {
+                            mcqCount++;
+                            mcqContainer.innerHTML += `
+                                <div class="q-card">
+                                    <h6 class="fw-bold mb-2 text-dark">${mcqCount}. ${q.question}</h6>
+                                    ${imgHTML}
+                                    <div class="mt-3">
+                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="A" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">A</span><span class="mcq-option-text">${q.opA}</span></div></label>
+                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="B" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">B</span><span class="mcq-option-text">${q.opB}</span></div></label>
+                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="C" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">C</span><span class="mcq-option-text">${q.opC}</span></div></label>
+                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="D" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">D</span><span class="mcq-option-text">${q.opD}</span></div></label>
+                                    </div>
+                                </div>
+                            `;
+                        } else if(q.qType === 'written') {
+                            writtenCount++;
+                            writtenContainer.innerHTML += `
+                                <div class="q-card">
+                                    <h6 class="fw-bold mb-2 text-dark">${writtenCount}. ${q.question}</h6>
+                                    ${imgHTML}
+                                    <div class="mt-3">
+                                        <textarea name="written_${index}" class="form-control written-textarea p-3" rows="4" placeholder="তোমার উত্তরটি এখানে টাইপ করো..."></textarea>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    // ওএমআর স্টাইল সিলেক্টেড ইফেক্ট স্ক্রিপ্ট
+                    document.querySelectorAll('.mcq-radio').forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const parent = this.closest('.q-card');
+                            parent.querySelectorAll('.mcq-option').forEach(opt => opt.style.backgroundColor = '#ffffff');
+                            parent.querySelectorAll('.mcq-option').forEach(opt => opt.style.borderColor = '#cbd5e1');
+                            if(this.checked) {
+                                this.nextElementSibling.style.backgroundColor = '#eff6ff';
+                                this.nextElementSibling.style.borderColor = '#3b82f6';
+                            }
+                        });
+                    });
+
+                    // ইন্টারফেস শো করা ও টাইমার চালু
+                    document.getElementById('examLoader').style.display = 'none';
+                    document.getElementById('examForm').style.display = 'block';
+                    startTimer();
+
+                    // LaTeX রেন্ডারিং
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+
+                } else {
+                    Swal.fire('দুঃখিত', 'এই চ্যাপ্টারের কোনো এক্সাম প্রশ্ন পাওয়া যায়নি!', 'warning');
+                }
+            })
+            .catch(() => Swal.fire('Error', 'প্রশ্নপত্র লোড করতে ব্যর্থ হয়েছে!', 'error'));
+        }
+
+        function startTimer() {
+            const timerDisplay = document.getElementById('examTimer');
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(examDurationSeconds / 60);
+                let seconds = examDurationSeconds % 60;
+                timerDisplay.innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                if (examDurationSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    Swal.fire('সময় শেষ!', 'তোমার উত্তরপত্রটি স্বয়ংক্রিয়ভাবে সাবমিট করা হচ্ছে।', 'info').then(() => {
+                        document.getElementById('examForm').requestSubmit();
+                    });
+                }
+                examDurationSeconds--;
+            }, 1000);
+        }
+
+        function submitExam(e) {
+            e.preventDefault();
+            clearInterval(timerInterval);
+            
+            Swal.fire({
+                title: 'অভিনন্দন!',
+                text: 'তোমার উত্তরপত্রটি সফলভাবে জমা নেওয়া হয়েছে। স্যারের মূল্যায়নের পর ফলাফল ড্যাশবোর্ডে দেখতে পাবে।',
+                icon: 'success',
+                confirmButtonText: 'ড্যাশবোর্ডে ফিরে যাও'
+            }).then(() => {
+                window.location.href = 'dashboard.html';
+            });
+        }
+    </script>
+</body>
+</html>
