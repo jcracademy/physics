@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhysicsMaster - Exam Panel</title>
+    <title>PM - Exam Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -13,109 +13,171 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        body {
+        /* ব্রাউজারের সব ডিফল্ট টপ মার্জিন ও প্যাডিং রিমুভ */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
             font-family: 'Noto Sans Bengali', sans-serif;
             background-color: #f1f5f9;
             color: #0f172a;
         }
+        
+        /* হেডারカードটিকে ফুল-উইডথ এবং একদম টপে সেট করা */
         .exam-header-card {
             background: linear-gradient(135deg, #1e293b, #0f172a);
             color: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border-radius: 0 0 16px 16px; /* শুধু নিচের কোণা দুটি গোল হবে */
+            margin-top: 0 !important;
+            width: 100%;
         }
+        
         .timer-badge {
             font-size: 1.25rem;
             background-color: #ef4444;
-            animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-        .q-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
+        
+        .section-header-btn {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            font-weight: 700;
+            text-align: left;
+            padding: 15px 20px;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
+        
+        .section-header-btn:not(.collapsed) {
+            background-color: #f8fafc;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 2px solid #0f172a;
+        }
+        
+        .collapse-body {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-top: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            padding: 24px;
+        }
+        
+        .q-card {
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .q-card:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        
         .mcq-option {
             border: 1px solid #cbd5e1;
             border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 0.95rem;
         }
+        
         .mcq-option:hover {
             background-color: #f8fafc;
-            border-color: #3b82f6;
+            border-color: #0f172a;
         }
-        .mcq-radio:checked + .mcq-option-text {
-            font-weight: 700;
-            color: #2563eb;
+        
+        .mcq-radio:checked + .mcq-option {
+            background-color: #f0fdf4;
+            border-color: #22c55e;
+            font-weight: 600;
         }
+        
         .written-textarea {
             border: 1px dashed #94a3b8;
             border-radius: 8px;
             background-color: #f8fafc;
-            resize: vertical;
         }
-        .written-textarea:focus {
-            background-color: #ffffff;
-            border-color: #0f172a;
-            box-shadow: none;
+        .opt-correct {
+            background-color: #d1fae5 !important; /* হালকা সবুজ */
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: 600;
+        }
+        .opt-wrong {
+            background-color: #fee2e2 !important; /* হালকা লাল */
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <div class="container py-4">
-        <div class="exam-header-card p-4 mb-4 text-center text-sm-start d-sm-flex align-items-center justify-content-between">
+    <div class="exam-header-card p-4 mb-4 shadow-sm">
+        <div class="container-fluid px-sm-4 d-sm-flex align-items-center justify-content-between text-center text-sm-start">
             <div>
-                <span class="badge bg-primary mb-2 text-uppercase fw-bold">Live Board Standard Exam</span>
-                <h2 class="fw-bold mb-1" id="examTitle">পদার্থবিজ্ঞান ১ম পত্র: গতিবিদ্যা</h2>
-                <p class="text-white-50 mb-0 small"><i class="bi bi-info-circle"></i> মোট প্রশ্ন: ৫০টি (MCQ) + ১০টি (Written)</p>
+                <span class="badge bg-primary mb-2 text-uppercase fw-bold">উত্তরণ প্রাইভেট সেন্টার</span>
+                <h2 class="fw-bold mb-1" id="examTitle">পদার্থবিজ্ঞান </h2>
+                <p class="text-white-50 mb-0 small" id="examInfo"><i class="bi bi-info-circle"></i> প্রশ্নপত্র লোড হচ্ছে...</p>
             </div>
             <div class="mt-3 mt-sm-0 text-center">
-                <div class="text-white-50 small mb-1 fw-bold"><i class="bi bi-alarm"></i> অবশিষ্ট সময়</div>
+                <div class="text-white-50 small mb-1 fw-bold"><i class="bi bi-alarm"></i> অবশিষ্ট সময়</div>
                 <span class="badge timer-badge px-4 py-2.5 rounded-3 fw-bold" id="examTimer">60:00</span>
             </div>
         </div>
+    </div>
 
+    <div class="container pb-5">
+        
         <div id="examLoader" class="text-center py-5">
             <div class="spinner-border text-dark" role="status"></div>
-            <p class="mt-2 text-muted">গুগল শিট থেকে প্রশ্নপত্র তৈরি হচ্ছে...</p>
+            <p class="mt-2 text-muted">সার্ভার থেকে প্রশ্নপত্র তৈরি হচ্ছে...</p>
         </div>
 
         <form id="examForm" style="display: none;" onsubmit="submitExam(event)">
-            <div class="row">
+            <div class="row g-4">
+                
                 <div class="col-lg-8">
                     
-                    <div class="mb-5">
-                        <h4 class="fw-black text-dark mb-4 border-bottom pb-2 text-primary"><i class="bi bi-list-check"></i> অংশ ১: বহুনির্বাচনী প্রশ্ন (MCQ)</h4>
-                        <div id="mcqContainer"></div>
+                    <div class="mb-4">
+                        <button class="section-header-btn" type="button" data-bs-toggle="collapse" data-bs-target="#writtenCollapse" aria-expanded="true">
+                            <span class="fs-5 text-dark"><i class="bi bi-pencil-square text-success"></i> অংশ ১: সিকিউ / লিখিত প্রশ্ন (Written Part)</span>
+                            <i class="bi bi-chevron-down fs-5"></i>
+                        </button>
+                        <div class="collapse show" id="writtenCollapse">
+                            <div class="collapse-body" id="writtenContainer"></div>
+                        </div>
                     </div>
 
-                    <div class="mb-5">
-                        <h4 class="fw-black text-dark mb-4 border-bottom pb-2 text-success"><i class="bi bi-pencil-square"></i> অংশ ২: সিজনশীল/সংক্ষিপ্ত লিখিত প্রশ্ন (Written)</h4>
-                        <div id="writtenContainer"></div>
+                    <div class="mb-4">
+                        <button class="section-header-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcqCollapse" aria-expanded="false">
+                            <span class="fs-5 text-dark"><i class="bi bi-list-check text-primary"></i> অংশ ২: বহুনির্বাচনী প্রশ্ন (MCQ Part)</span>
+                            <i class="bi bi-chevron-down fs-5"></i>
+                        </button>
+                        <div class="collapse" id="mcqCollapse">
+                            <div class="collapse-body" id="mcqContainer"></div>
+                        </div>
                     </div>
 
                 </div>
 
                 <div class="col-lg-4">
-                    <div class="card p-4 border-dark sticky-top" style="top: 20px; z-index: 10;">
+                    <div class="card p-4 border-secondary sticky-top shadow-sm" style="top: 20px; z-index: 10; background: #ffffff; border-radius: 12px;">
                         <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-shield-check"></i> পরীক্ষা সাবমিশন</h5>
-                        <p class="text-muted small">সব প্রশ্নের উত্তর নিশ্চিত করার পর নিচের ফাইনাল সাবমিট বাটনে ক্লিক করো। সময় শেষ হলে অটো-সাবমিট হয়ে যাবে।</p>
+                        <p class="text-secondary small">MCQ প্রশ্নের উত্তর এখানেই দিতে পার আর লিখিত প্রশ্নের উত্তর খাতায় লিখে জমা দিতে হবে।</p>
                         <hr>
-                        <button type="submit" class="btn btn-dark btn-lg w-100 fw-bold py-3 rounded-3 shadow">
+                        <button type="submit" class="btn btn-dark btn-lg w-100 fw-bold py-3 rounded-3 shadow-sm">
                             <i class="bi bi-cloud-arrow-up-fill"></i> ফাইনাল সাবমিট করুন
                         </button>
                     </div>
@@ -124,27 +186,27 @@
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const chapterId = urlParams.get('ch') || 'hsc_1st_ch2';
-        
-        // আপনার আগের Apps Script URL টি এখানে বসাবেন
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTXhfGSa8Eanzxp9ltJNj8v7iEWeOy1R_n7ABN_awl7Tf_0D54OY8vjVZRThMjc0C9/exec";
 
-        let examDurationSeconds = 60 * 60; // ৬০ মিনিট
+        let examDurationSeconds = 60 * 60; 
         let timerInterval;
+        let globalQuestionsData = [];
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadExamQuestions();
-        });
+        window.addEventListener('DOMContentLoaded', () => { getExamQuestions(); });
 
-        function loadExamQuestions() {
-            // শিট থেকে এক্সাম ডাটা আনার ফেচ কল (একশনটি আপনার ব্যাকএন্ডে হ্যান্ডেল করতে হবে)
+        function getExamQuestions() {
             fetch(`${SCRIPT_URL}?action=getExamQuestions&chId=${chapterId}`)
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 if(data.result === "success" && data.questions.length > 0) {
-                    
+                    if(data.chapterName) { document.getElementById('examTitle').innerText = data.chapterName;}
+
+                    globalQuestionsData = data.questions;
                     const mcqContainer = document.getElementById('mcqContainer');
                     const writtenContainer = document.getElementById('writtenContainer');
                     
@@ -154,66 +216,54 @@
                     data.questions.forEach((q, index) => {
                         let imgHTML = q.qImg ? `<div class="my-2"><img src="${q.qImg}" class="img-fluid rounded border" style="max-height:180px;"></div>` : "";
                         
-                        if(q.qType === 'mcq') {
-                            mcqCount++;
-                            mcqContainer.innerHTML += `
-                                <div class="q-card">
-                                    <h6 class="fw-bold mb-2 text-dark">${mcqCount}. ${q.question}</h6>
-                                    ${imgHTML}
-                                    <div class="mt-3">
-                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="A" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">A</span><span class="mcq-option-text">${q.opA}</span></div></label>
-                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="B" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">B</span><span class="mcq-option-text">${q.opB}</span></div></label>
-                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="C" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">C</span><span class="mcq-option-text">${q.opC}</span></div></label>
-                                        <label class="w-100"><input type="radio" name="mcq_${index}" value="D" class="d-none mcq-radio"><div class="mcq-option"><span class="badge bg-secondary bg-opacity-10 text-dark">D</span><span class="mcq-option-text">${q.opD}</span></div></label>
-                                    </div>
-                                </div>
-                            `;
-                        } else if(q.qType === 'written') {
+                        if(q.qType === 'written' || q.qType === 'written ') {
                             writtenCount++;
                             writtenContainer.innerHTML += `
                                 <div class="q-card">
                                     <h6 class="fw-bold mb-2 text-dark">${writtenCount}. ${q.question}</h6>
                                     ${imgHTML}
-                                    <div class="mt-3">
-                                        <textarea name="written_${index}" class="form-control written-textarea p-3" rows="4" placeholder="তোমার উত্তরটি এখানে টাইপ করো..."></textarea>
+                                    <div class="mt-2">
+                                        <button class="btn btn-sm btn-outline-secondary fw-bold rounded-2 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#writtenAnsCollapse_${index}">
+                                            <i class="bi bi-pencil"></i> উত্তর লিখুন
+                                        </button>
+                                        <div class="collapse" id="writtenAnsCollapse_${index}">
+                                            <textarea id="ans_${index}" class="form-control written-textarea p-3" rows="4" placeholder="তোমার উত্তরটি এখানে টাইপ করো..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            mcqCount++;
+                            mcqContainer.innerHTML += `
+                                <div class="q-card">
+                                    <h6 class="fw-bold mb-2 text-dark">${mcqCount}. ${q.question}</h6>
+                                    ${imgHTML}
+                                    <div class="row g-2 mt-1">
+                                        <div class="col-6"><label class="w-100"><input type="radio" name="mcq_${index}" value="A" class="d-none mcq-radio"><div class="mcq-option"><span>A.</span><span>${q.opA}</span></div></label></div>
+                                        <div class="col-6"><label class="w-100"><input type="radio" name="mcq_${index}" value="B" class="d-none mcq-radio"><div class="mcq-option"><span>B.</span><span>${q.opB}</span></div></label></div>
+                                        <div class="col-6"><label class="w-100"><input type="radio" name="mcq_${index}" value="C" class="d-none mcq-radio"><div class="mcq-option"><span>C.</span><span>${q.opC}</span></div></label></div>
+                                        <div class="col-6"><label class="w-100"><input type="radio" name="mcq_${index}" value="D" class="d-none mcq-radio"><div class="mcq-option"><span>D.</span><span>${q.opD}</span></div></label></div>
                                     </div>
                                 </div>
                             `;
                         }
                     });
 
-                    // ওএমআর স্টাইল সিলেক্টেড ইফেক্ট স্ক্রিপ্ট
-                    document.querySelectorAll('.mcq-radio').forEach(radio => {
-                        radio.addEventListener('change', function() {
-                            const parent = this.closest('.q-card');
-                            parent.querySelectorAll('.mcq-option').forEach(opt => opt.style.backgroundColor = '#ffffff');
-                            parent.querySelectorAll('.mcq-option').forEach(opt => opt.style.borderColor = '#cbd5e1');
-                            if(this.checked) {
-                                this.nextElementSibling.style.backgroundColor = '#eff6ff';
-                                this.nextElementSibling.style.borderColor = '#3b82f6';
-                            }
-                        });
-                    });
+                    // 🚀 ডাইনামিকালি প্রশ্ন সংখ্যা আপডেট করার লজিক
+                    document.getElementById('examInfo').innerHTML = `<i class="bi bi-info-circle"></i> মোট প্রশ্ন: ${mcqCount}টি (MCQ) + ${writtenCount}টি (Written)`;
 
-                    // ইন্টারফেস শো করা ও টাইমার চালু
                     document.getElementById('examLoader').style.display = 'none';
                     document.getElementById('examForm').style.display = 'block';
                     startTimer();
 
-                    // LaTeX রেন্ডারিং
                     renderMathInElement(document.body, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false}
-                        ],
+                        delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}],
                         throwOnError: false
                     });
-
                 } else {
-                    Swal.fire('দুঃখিত', 'এই চ্যাপ্টারের কোনো এক্সাম প্রশ্ন পাওয়া যায়নি!', 'warning');
+                    Swal.fire('দুঃখিত', 'কোনো প্রশ্ন পাওয়া যায়নি!', 'warning');
                 }
-            })
-            .catch(() => Swal.fire('Error', 'প্রশ্নপত্র লোড করতে ব্যর্থ হয়েছে!', 'error'));
+            });
         }
 
         function startTimer() {
@@ -222,12 +272,9 @@
                 let minutes = Math.floor(examDurationSeconds / 60);
                 let seconds = examDurationSeconds % 60;
                 timerDisplay.innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                
                 if (examDurationSeconds <= 0) {
                     clearInterval(timerInterval);
-                    Swal.fire('সময় শেষ!', 'তোমার উত্তরপত্রটি স্বয়ংক্রিয়ভাবে সাবমিট করা হচ্ছে।', 'info').then(() => {
-                        document.getElementById('examForm').requestSubmit();
-                    });
+                    processExamResults();
                 }
                 examDurationSeconds--;
             }, 1000);
@@ -235,15 +282,85 @@
 
         function submitExam(e) {
             e.preventDefault();
-            clearInterval(timerInterval);
-            
             Swal.fire({
-                title: 'অভিনন্দন!',
-                text: 'তোমার উত্তরপত্রটি সফলভাবে জমা নেওয়া হয়েছে। স্যারের মূল্যায়নের পর ফলাফল ড্যাশবোর্ডে দেখতে পাবে।',
+                title: 'তুমি কি নিশ্চিত?',
+                text: "উত্তরপত্র ফাইনাল সাবমিট করতে চাচ্ছ?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0f172a',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'হ্যাঁ, সাবমিট করি'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    clearInterval(timerInterval);
+                    processExamResults();
+                }
+            });
+        }
+
+        function processExamResults() {
+            let totalMCQ = 0;
+            let correctMCQ = 0;
+
+            globalQuestionsData.forEach((q, index) => {
+                // শুধুমাত্র এমসিকিউ প্রশ্নের জন্য চেক হবে
+                if(q.qType !== 'written' && q.qType !== 'written ') {
+                    totalMCQ++;
+                    
+                    // শিক্ষার্থীর সিলেক্ট করা অপশন এবং সঠিক অপশন
+                    const selectedOpt = document.querySelector(`input[name="mcq_${index}"]:checked`);
+                    const studentAns = selectedOpt ? selectedOpt.value : null;
+                    const correctAns = q.correctOp.trim().toUpperCase(); // A, B, C, D
+
+                    const radios = document.querySelectorAll(`input[name="mcq_${index}"]`);
+                    radios.forEach(r => r.disabled = true);
+
+                    // অপশনগুলোর ভিউ বা ডাইভ এলিমেন্ট খুঁজে বের করা
+                    radios.forEach(r => {
+                        const optionWrapper = r.nextElementSibling; // .mcq-option ডাইভটি
+                        const currentVal = r.value;
+
+                        // ১. যদি এটিই প্রকৃত সঠিক উত্তর হয়, তবে একে সবুজ করুন
+                        if (currentVal === correctAns) {
+                            optionWrapper.classList.add('opt-correct');
+                            // একটি টিক চিহ্ন যুক্ত করে দেওয়া
+                            optionWrapper.innerHTML += ` <i class="bi bi-check-circle-fill text-success ms-auto"></i>`;
+                        }
+                        
+                        // ২. যদি শিক্ষার্থী ভুল উত্তর দিয়ে থাকে, তবে তার সিলেক্ট করা ভুল উত্তরটিকে লাল করুন
+                        if (studentAns && studentAns === currentVal && studentAns !== correctAns) {
+                            optionWrapper.classList.add('opt-wrong');
+                            // একটি ক্রস চিহ্ন যুক্ত করে দেওয়া
+                            optionWrapper.innerHTML += ` <i class="bi bi-x-circle-fill text-danger ms-auto"></i>`;
+                        }
+                    });
+
+                    // স্কোর গণনা
+                    if(studentAns === correctAns) {
+                        correctMCQ++;
+                    }
+                }
+            });
+
+            // 🚀 সাবমিট করার পর এমসিকিউ এর পার্টটি অটোমেটিক এক্সপ্যান্ড (খোলা) করে দেওয়া যেন রেজাল্ট দেখতে সুবিধা হয়
+            const mcqCollapseEl = document.getElementById('mcqCollapse');
+            const bsCollapse = new bootstrap.Collapse(mcqCollapseEl, { toggle: false });
+            bsCollapse.show();
+
+            // রেজাল্ট অ্যালার্ট দেখানো
+            Swal.fire({
+                title: 'পরীক্ষা সম্পন্ন হয়েছে!',
+                html: `
+                    <div class="text-start p-2">
+                        <div class="alert alert-primary text-center fw-bold fs-5 mb-3">
+                            🎯 তোমার MCQ স্কোর: ${correctMCQ} / ${totalMCQ}
+                        </div>
+                        <p class="mb-0 text-center text-secondary small"><i class="bi bi-info-circle"></i> নিচে স্ক্রল করে তোমার ভুলের সাথে সঠিক উত্তরগুলো মিলিয়ে নাও।</p>
+                    </div>
+                `,
                 icon: 'success',
-                confirmButtonText: 'ড্যাশবোর্ডে ফিরে যাও'
-            }).then(() => {
-                window.location.href = 'dashboard.html';
+                confirmButtonColor: '#0f172a',
+                confirmButtonText: 'ঠিক আছে'
             });
         }
     </script>
