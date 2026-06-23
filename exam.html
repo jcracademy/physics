@@ -137,7 +137,7 @@
         <div class="container-fluid px-sm-4 d-sm-flex align-items-center justify-content-between text-center text-sm-start">
             <div>
                 <span class="badge bg-primary mb-2 text-uppercase fw-bold">উত্তরণ প্রাইভেট সেন্টার</span>
-                <h2 class="fw-bold mb-1" id="examTitle">পদার্থবিজ্ঞান </h2>
+                <h2 class="fw-bold mb-1" id="examTitle">আইসিটি </h2>
                 <p class="text-white-50 mb-0 small" id="examInfo"><i class="bi bi-info-circle"></i> প্রশ্নপত্র লোড হচ্ছে...</p>
             </div>
             <div class="mt-3 mt-sm-0 text-center" id="headerTimerArea" style="display: none;">
@@ -249,7 +249,7 @@
                 if(data.result === "success" && data.questions.length > 0) {
                     
                     if(data.chapterName) { 
-                        document.getElementById('examTitle').innerText = data.chapterName;
+                      //  document.getElementById('examTitle').innerText = data.chapterName;
                         document.getElementById('startPanelTitle').innerText = data.chapterName;
                     }
 
