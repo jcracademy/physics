@@ -216,6 +216,10 @@
         html {
             scroll-behavior: smooth;
         }
+
+        .blink-btn {background-color: #f60e0e60; color: white; padding: 10px 20px;border: none;border-radius: 5px;cursor: pointer; animation: blink 2s infinite;}
+        @keyframes blink { 0%, 100% {opacity: 1; } 50% {opacity: 0.3;}}
+
     </style>
 </head>
 <body>
@@ -234,7 +238,7 @@
                     <li class="nav-item"><a class="nav-link text-primary active" href="#">হোম</a></li>
                     <li class="nav-item"><a class="nav-link text-white-50" href="#classes">কোর্সসমূহ</a></li>
                     <li class="nav-item"><a class="nav-link text-white-50" href="#strategies">আমাদের বৈশিষ্ট্য</a></li>
-                    <li class="nav-item"><a class="nav-link text-white-50" href="exam.html">Exam</a></li>
+                    <li class="nav-item"><a class="nav-link text-white-50 blink-btn" href="exam.html">Exam</a></li>
                      <li class="nav-item"><a class="nav-link text-white-50" href="#leaderboard">Leaderboard</a></li>
                     <li class="nav-item"><a class="nav-link text-white-50" href="#contact">যোগাযোগ</a></li>
                 </ul>
@@ -302,7 +306,7 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card premium-card h-100 d-flex flex-column justify-content-between">
                     <div class="card-body p-4 p-lg-5">
-                        <div class="card-icon-box bg-primary bg-opacity-10 text-primary">🎒 SSC Physics Master Pack</div>
+                        <div class="card-icon-box bg-primary bg-opacity-10 text-primary"> SSC Physics Master Pack</div>
                         
                         <ul class="list-unstyled text-secondary course-info-list fw-medium mb-0">
                             <li>
@@ -329,7 +333,7 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card premium-card h-100 d-flex flex-column justify-content-between">
                     <div class="card-body p-4 p-lg-5">
-                        <div class="card-icon-box bg-info bg-opacity-10 text-info">🚀 HSC Ultimate Physics Solution</div>
+                        <div class="card-icon-box bg-info bg-opacity-10 text-info"> HSC Ultimate Physics Solution</div>
                         
                         <ul class="list-unstyled text-secondary course-info-list fw-medium mb-0">
                             <li>
