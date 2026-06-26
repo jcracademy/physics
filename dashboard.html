@@ -5,96 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhysicsMaster - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Bengali:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            --dark-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+            --simulation-gradient: linear-gradient(135deg, #ec4899, #be185d);
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --hover-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.15);
+        }
+
         body {
-            font-family: 'Noto Sans Bengali', sans-serif;
+            font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
             background-color: #f8fafc;
             color: #0f172a;
             min-height: 100vh;
         }
-        /* প্রফেশনাল গ্রেডিয়েন্ট টপ নেভিগেশন */
+
         .dashboard-nav {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--dark-gradient);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
-        /* স্বাগতম বক্স - ক্লিন বর্ডার ও শ্যাডো ডিজাইন */
+
         .welcome-box {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
         }
-        /* класс সিলেক্ট কার্ড */
+        .welcome-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background: var(--primary-gradient);
+        }
+
+        /* ক্লাস সিলেক্ট কার্ড */
         .class-select-card {
-            background-color: #ffffff;
+            background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 16px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.25s ease-in-out;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .class-select-card:hover {
             border-color: #3b82f6;
-            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.08);
-            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+            transform: translateY(-6px);
         }
-        /* অ্যাক্টিভ ক্লাস কার্ড স্টাইল */
+        /* মডার্ন আইকন স্টাইল */
+        .card-icon-box {
+            width: 60px;
+            height: 60px;
+            background: #eff6ff;
+            color: #3b82f6;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+        .class-select-card:hover .card-icon-box {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
         .class-select-card.active-card {
             border: 2px solid #3b82f6;
-            background-color: #f0f7ff;
+            background: linear-gradient(180deg, #f0fdf4 0%, #eff6ff 100%);
         }
-        /* পেপার বা পত্র বাটন */
+
+        /* পেপার বাটন */
         .paper-btn {
             background-color: #ffffff;
-            color: #1e293b;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 10px 28px;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 12px 32px;
             font-weight: 600;
-            transition: all 0.2s;
-        }
-        .paper-btn:hover {
-            border-color: #3b82f6;
-            background-color: #f8fafc;
-            color: #3b82f6;
+            transition: all 0.25s ease;
         }
         .paper-btn.active-paper {
-            background-color: #3b82f6;
+            background: var(--primary-gradient);
             color: #ffffff;
-            border-color: #3b82f6;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
         }
+
         /* অধ্যায়ের কার্ড ডিজাইন */
         .chapter-card {
             background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            transition: all 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
             display: block;
+            box-shadow: var(--card-shadow);
         }
         .chapter-card:hover {
-            border-color: #0f172a;
-            background-color: #f8fafc;
-            transform: scale(1.02);
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
         }
-        /* অধ্যায়ের ক্রমিকে গোল ব্যাজ */
+        
+        /* অধ্যায়ের বড় ফন্ট */
+        .chapter-title {
+            font-size: 1.2rem; /* সাইজ বড় করা হয়েছে */
+            font-weight: 700;
+            color: #1e293b;
+        }
+
         .chapter-number {
-            width: 40px;
-            height: 40px;
-            background-color: #0f172a;
-            color: #ffffff;
+            width: 44px;
+            height: 44px;
+            background: #f1f5f9;
+            color: #0f172a;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
-        
+        .chapter-card:hover .chapter-number {
+            background: var(--primary-gradient);
+            color: #ffffff;
+        }
+
+        /* সিমুলেশন কার্ড স্টাইল */
+        .sim-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+        .sim-card:hover {
+            border-color: #ec4899;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(236, 72, 153, 0.15);
+        }
+        .sim-icon {
+            width: 50px;
+            height: 50px;
+            background: #fdf2f8;
+            color: #ec4899;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .fade-in-section {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -102,60 +184,105 @@
     <nav class="navbar navbar-expand-lg dashboard-nav py-3 sticky-top">
         <div class="container">
             <a class="navbar-brand fw-black fs-4 text-white d-flex align-items-center gap-2" href="#">
-                <span class="badge px-2 py-1 rounded-3" style="background-color: #3b82f6;">⚛</span>
+                <span class="badge px-2.5 py-1.5 rounded-3 d-flex align-items-center justify-content-center" style="background: var(--primary-gradient); font-size: 1.2rem;">
+                    <i class="bi bi-symmetry-horizontal"></i>
+                </span>
                 <span class="fw-bold text-white">Physics<span class="fw-normal text-white-50">Master</span></span>
             </a>
             <div class="ms-auto d-flex align-items-center gap-3">
-                <span class="text-white-50 d-none d-sm-inline">শিক্ষার্থী: <strong class="text-white" id="navStudentName">লোড হচ্ছে...</strong></span>
-                <button onclick="logout()" class="btn btn-sm btn-outline-danger px-3 py-1.5 rounded-3 fw-bold text-white border-danger" style="background: rgba(220, 53, 69, 0.1);">লগআউট 🚪</button>
+                <div class="bg-white bg-opacity-10 px-3 py-1.5 rounded-3 d-none d-sm-inline-block">
+                    <span class="text-white-50 small">শিক্ষার্থী: </span><strong class="text-white" id="navStudentName">লোড হচ্ছে...</strong>
+                </div>
+                <button onclick="logout()" class="btn btn-sm btn-outline-danger px-3 py-2 rounded-3 fw-bold text-white border-opacity-50" style="background: rgba(239, 68, 68, 0.1);">লগআউট <i class="bi bi-box-arrow-right ms-1"></i></button>
             </div>
         </div>
     </nav>
 
     <div class="container py-5">
         <div class="welcome-box p-4 p-md-5 mb-5 text-center text-md-start shadow-sm">
-            <h2 class="fw-bold mb-2">স্বাগতম, <span class="text-primary" id="welcomeStudentName">শিক্ষার্থী</span>! </h2>
-            <p class="text-secondary mb-0">আজ তুমি পদার্থবিজ্ঞান বইয়ের কোন অধ্যায়টি পড়তে চাও? নিচে থেকে তোমার কোর্সটি নির্বাচন করো।</p>
+            <h2 class="fw-bold mb-2">স্বাগতম, <span class="text-primary" id="welcomeStudentName">শিক্ষার্থী</span>! ✨</h2>
+            <p class="text-secondary mb-0 fs-5">আজ তুমি পদার্থবিজ্ঞান বইয়ের কোন অধ্যায়টি পড়তে চাও? নিচে থেকে তোমার কোর্সটি নির্বাচন করো।</p>
         </div>
 
-        <div class="row g-4 justify-content-center mb-4">
+        <div class="row g-4 justify-content-center mb-5">
             <div class="col-md-6 col-lg-5">
-                <div class="card class-select-card p-4 text-center shadow-sm" id="sscCard" onclick="selectClass('SSC')">
-                    <div class="fs-2 mb-2">🎒</div>
+                <div class="card class-select-card p-4 h-100 shadow-sm d-flex flex-column align-items-start" id="sscCard" onclick="selectClass('SSC')">
+                    <div class="card-icon-box mb-3">
+                        <i class="bi bi-book-half"></i>
+                    </div>
                     <h4 class="fw-bold text-dark mb-2">SSC (নবম-দশম শ্রেণি)</h4>
                     <p class="text-secondary small mb-0">পদার্থবিজ্ঞান বইয়ের বিস্তারিত টাইপভিত্তিক কন্টেন্ট, গাণিতিক সমাধান ও প্র্যাকটিস।</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-5">
-                <div class="card class-select-card p-4 text-center shadow-sm" id="hscCard" onclick="selectClass('HSC')">
-                    <div class="fs-2 mb-2">🚀</div>
+                <div class="card class-select-card p-4 h-100 shadow-sm d-flex flex-column align-items-start" id="hscCard" onclick="selectClass('HSC')">
+                    <div class="card-icon-box mb-3">
+                        <i class="bi bi-rocket-takeoff-fill"></i>
+                    </div>
                     <h4 class="fw-bold text-dark mb-2">HSC (একাদশ-দ্বাদশ শ্রেণি)</h4>
-                    <p class="text-secondary small mb-0">পদার্থবিজ্ঞানের জটিল সব গাণিতিক কনসেপ্ট এবং অ্যাডভান্সড প্র্যাকটিস চ্যালেঞ্জ।</p>
+                    <p class="text-secondary small mb-0">পদার্থবিজ্ঞানের জটিল সব গাণিতিক কনসেপ্ট এবং অ্যাডভান্সড প্র্যাকটিস।</p>
                 </div>
             </div>
         </div>
 
-        <div id="paperSection" class="text-center mb-5" style="display: none;">
-            <p class="text-muted small fw-bold mb-3">পত্র নির্বাচন করো</p>
-            <div class="d-flex justify-content-center gap-2">
+        <div id="paperSection" class="text-center mb-5 fade-in-section" style="display: none;">
+            <p class="text-muted small fw-bold text-uppercase tracking-wider mb-3">পত্র নির্বাচন করো</p>
+            <div class="d-flex justify-content-center gap-3">
                 <button class="btn paper-btn active-paper" id="paper1stBtn" onclick="selectPaper('1st')">১ম পত্র</button>
                 <button class="btn paper-btn" id="paper2ndBtn" onclick="selectPaper('2nd')">২য় পত্র</button>
             </div>
         </div>
 
-        <div id="chapterSection" style="display: none;">
-            <div class="border-top border-secondary pt-5 mb-4">
+        <div id="chapterSection" class="fade-in-section mb-5" style="display: none;">
+            <div class="border-top border-light-subtle pt-5 mb-4">
                 <h3 class="fw-bold text-dark mb-1">📖 <span id="selectedClassText" class="text-primary"></span> শ্রেণি — <span id="selectedPaperText" class="text-muted"></span> অধ্যায়সমূহ</h3>
                 <p class="text-secondary small">যে অধ্যায়টি স্টাডি করতে চাও, সেটির ওপর ক্লিক করো:</p>
             </div>
 
-            <div id="chaptersLoading" class="text-center py-4" style="display: none;">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2 text-muted small">সার্ভার থেকে ডেটা লোড হচ্ছে...</p>
+            <div id="chaptersLoading" class="text-center py-5" style="display: none;">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                <p class="mt-3 text-muted">সার্ভার থেকে ডেটা লোড হচ্ছে...</p>
             </div>
 
             <div class="row g-3" id="chaptersContainer"></div>
         </div>
+
+        <hr class="my-5 opacity-25">
+
+        <div class="mb-4">
+            <h3 class="fw-bold text-dark mb-1">🔬 ফিজিক্স সিমুলেশন ল্যাব</h3>
+            <p class="text-secondary small">ইন্টারেক্টিভ সিমুলেশনের মাধ্যমে পদার্থবিজ্ঞানের কঠিন থিওরিগুলো প্র্যাক্টিক্যালি বোঝো:</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <a href="https://phet.colorado.edu/sims/html/vector-addition/latest/vector-addition_all.html" target="_blank" class="card sim-card p-3 d-flex flex-row align-items-center gap-3">
+                    <div class="sim-icon"><i class="bi bi-arrow-up-right-square"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">ভেক্টর যোগফল সিমুলেশন</h6>
+                        <span class="text-muted small">সামান্তরিক সূত্র ও উপাংশ নীতি</span>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="https://phet.colorado.edu/sims/html/projectile-motion/latest/projectile-motion_all.html" target="_blank" class="card sim-card p-3 d-flex flex-row align-items-center gap-3">
+                    <div class="sim-icon"><i class="bi bi-speedometer2"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">প্রাস বা প্রজেক্টাইল মোশন</h6>
+                        <span class="text-muted small">চলন পথ এবং সর্বোচ্চ উচ্চতা পরীক্ষা</span>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_all.html" target="_blank" class="card sim-card p-3 d-flex flex-row align-items-center gap-3">
+                    <div class="sim-icon"><i class="bi bi-lightning-charge"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">চলতড়িৎ ও সার্কিট ল্যাব</h6>
+                        <span class="text-muted small">ওহমের সূত্র ও রোধের কম্বিনেশন</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -171,23 +298,17 @@
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTXhfGSa8Eanzxp9ltJNj8v7iEWeOy1R_n7ABN_awl7Tf_0D54OY8vjVZRThMjc0C9/exec";
 
-        // গ্লোবাল মেমোরি ক্যাশ (এখন localStorage-এর পরিবর্তে sessionStorage থেকে রিড করবে)
         let serverChaptersCache = JSON.parse(sessionStorage.getItem("cachedChaptersList")) || [];
         let currentSelectedClass = "";
         let currentSelectedPaper = "1st"; 
-        let isDataLoaded = serverChaptersCache.length > 0; // সেশনে ডেটা অলরেডি থাকলে true হবে
+        let isDataLoaded = serverChaptersCache.length > 0;
 
         window.addEventListener('DOMContentLoaded', () => {
             preloadAllChaptersFromServer();
         });
 
-        // ১. sessionStorage মেকানিজম সহ ডাটা লোড মেথড
         function preloadAllChaptersFromServer() {
-            // যদি কারেন্ট সেশনে (ট্যাবে) অলরেডি ডাটা থাকে, তবে নতুন করে fetch হবে না
-            if (isDataLoaded) {
-                console.log("ডাটা ইতিমধ্যে sessionStorage-এ আছে। পেজ রিফ্রেশ করলেও সার্ভার রিকোয়েস্ট যাবে না।");
-                return;
-            }
+            if (isDataLoaded) return;
 
             const loading = document.getElementById('chaptersLoading');
             const section = document.getElementById('chapterSection');
@@ -203,27 +324,18 @@
                 if (data.result === "success") {
                     serverChaptersCache = data.chapters;
                     isDataLoaded = true;
-                    
-                    // ডাটা sessionStorage-এ সেভ করা হলো (ট্যাব ক্লোজ করলে মুছে যাবে, রিফ্রেশে থাকবে)
                     sessionStorage.setItem("cachedChaptersList", JSON.stringify(data.chapters));
-                    console.log("সার্ভার থেকে প্রথমবার ডাটা এনে sessionStorage-এ ক্যাশ করা হয়েছে!");
-                    
-                    if(currentSelectedClass) {
-                        renderChaptersFromCache();
-                    }
+                    if(currentSelectedClass) renderChaptersFromCache();
                 }
             })
             .catch(err => {
                 loading.style.display = 'none';
-                console.error("ডাটা প্রিলোড করতে সমস্যা হয়েছে:", err);
-                Swal.fire('Error', 'সার্ভার থেকে ডাটা প্রিলোড করা যায়নি। পেজটি রিফ্রেশ করুন।', 'error');
+                Swal.fire('Error', 'সার্ভার থেকে ডাটা প্রিলোড করা যায়নি।', 'error');
             });
         }
 
-        // ২. ক্লাস সিলেক্ট হ্যান্ডলার
         function selectClass(className) {
             currentSelectedClass = className;
-            
             document.getElementById('sscCard').classList.remove('active-card');
             document.getElementById('hscCard').classList.remove('active-card');
             
@@ -235,14 +347,11 @@
                 document.getElementById('hscCard').classList.add('active-card');
                 document.getElementById('paperSection').style.display = 'block';
             }
-
             renderChaptersFromCache();
         }
 
-        // ৩. পেপার সিলেক্ট হ্যান্ডলার
         function selectPaper(paperName) {
             currentSelectedPaper = paperName;
-            
             document.getElementById('paper1stBtn').classList.remove('active-paper');
             document.getElementById('paper2ndBtn').classList.remove('active-paper');
             
@@ -251,11 +360,9 @@
             } else {
                 document.getElementById('paper2ndBtn').classList.add('active-paper');
             }
-
             renderChaptersFromCache();
         }
 
-        // ৪. কাস্টম রেন্ডারার ফাংশন (যা সেশন স্টোরেজ থেকে ইনস্ট্যান্ট ডেটা দেখাবে)
         function renderChaptersFromCache() {
             const container = document.getElementById('chaptersContainer');
             const section = document.getElementById('chapterSection');
@@ -273,7 +380,6 @@
             }
             loading.style.display = 'none';
 
-            // সেশন মেমোরি থেকে রিয়েল-টাইম ফিল্টারিং
             const finalFiltered = serverChaptersCache.filter(ch => {
                 const rowClass = ch.className ? ch.className.toLowerCase() : "";
                 const matchClass = rowClass === currentSelectedClass.toLowerCase();
@@ -288,9 +394,8 @@
             if (finalFiltered.length > 0) {
                 displayFilteredList(finalFiltered, container);
             } else {
-                container.innerHTML = "<p class='text-muted text-center py-3'>এই কোর্সের কোনো অধ্যায় খুঁজে পাওয়া যায়নি।</p>";
+                container.innerHTML = "<div class='col-12 text-center py-3'><p class='text-muted bg-white d-inline-block px-4 py-2 rounded-3 shadow-sm'>এই কোর্সের কোনো অধ্যায় খুঁজে পাওয়া যায়নি।</p></div>";
             }
-            
             section.scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -299,11 +404,11 @@
             chaptersArray.forEach((ch, index) => {
                 const html = `
                     <div class="col-md-6 col-lg-4">
-                        <a href="chapter-view.html?class=${currentSelectedClass.toLowerCase()}&ch=${ch.chapterId}" class="card chapter-card p-3 shadow-sm">
+                        <a href="chapter-view.html?class=${currentSelectedClass.toLowerCase()}&ch=${ch.chapterId}" class="card chapter-card p-3 border-0">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="chapter-number">${index + 1}</div>
-                                <div class="fw-bold text-dark">${ch.chapterName}</div>
-                                <div class="ms-auto text-primary fw-bold">→</div>
+                                <div class="chapter-title flex-grow-1">${ch.chapterName}</div>
+                                <div class="text-primary fw-bold fs-4">→</div>
                             </div>
                         </a>
                     </div>
