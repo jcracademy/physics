@@ -11,6 +11,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="jcrstyle.css">
 
     <style>
         html, body {
@@ -21,7 +22,6 @@
             color: #1e293b;
         }
         
-        /* 👑 স্টিকি গ্লেসি হেডার (Topbar) */
         .exam-header-card {
             background: linear-gradient(135deg, #1e1b4b, #312e81);
             color: white;
@@ -33,9 +33,8 @@
             backdrop-filter: blur(10px);
         }
         
-        /* টাইমার ব্যাজ */
         .timer-badge {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -51,7 +50,6 @@
             }
         }
 
-        /* সময় শেষ হয়ে এলে টাইমারের লাইভ ব্লিংকিং অ্যানিমেশন */
         .timer-danger {
             background-color: #ef4444 !important;
             border-color: #f87171 !important;
@@ -64,18 +62,18 @@
             100% { transform: scale(1.03); box-shadow: 0 0 20px rgba(239, 68, 68, 0.7); }
         }
 
-        /* লাইভ ডট ব্লিংকিং অ্যানিমেশন */
         @keyframes liveDotBlink {
-            0% { opacity: 0.3; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1.1); }
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
         .live-badge-dot {
-            animation: liveDotBlink 0.8s infinite alternate ease-in-out;
+            animation: liveDotBlink 0.6s infinite alternate ease-in-out;
             display: inline-block;
+            color: #ef4444 !important;
+            margin-right: 3px;
         }
 
-        /* পরীক্ষার্থী প্রোফাইল আইকন */
         .student-avatar {
             width: 40px;
             height: 40px;
@@ -87,128 +85,16 @@
             font-size: 1.1rem;
             border: 1px solid rgba(255, 255, 255, 0.25);
         }
-        
-        /* সেকশন হেডার ডিজাইন */
-        .section-header-btn {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            color: #1e293b;
-            font-weight: 700;
-            padding: 16px 20px;
-            border-radius: 16px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04);
-            transition: all 0.2s ease;
-        }
-        
-        .section-header-btn:not(.collapsed) {
-            background-color: #ffffff;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom: 3px solid #4f46e5;
-        }
-        
-        .collapse-body {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-top: none;
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.01);
+
+        /* সার্ভার থেকে আসা উত্তরের জন্য কাস্টম বক্স */
+        .server-ans-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            color: #166534;
+            font-size: 0.95rem;
+            border-radius: 4px 8px 8px 4px;
         }
 
-        @media (min-width: 576px) {
-            .collapse-body { padding: 28px; }
-        }
-        
-        /* কুইজ কার্ড */
-        .q-card {
-            border-bottom: 1px dashed #e2e8f0;
-            padding-bottom: 20px;
-            margin-bottom: 24px;
-        }
-        
-        .q-card:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-        
-        /* MCQ অপশন ইফেক্ট */
-        .mcq-option {
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.98rem;
-            background-color: #fff;
-        }
-        
-        .mcq-option:hover {
-            background-color: #f1f5f9;
-            border-color: #6366f1;
-            transform: translateY(-1px);
-        }
-        
-        .mcq-radio:checked + .mcq-option {
-            background-color: #eef2ff;
-            border-color: #4f46e5;
-            color: #4f46e5;
-            font-weight: 600;
-            box-shadow: 0 0 0 1px #4f46e5;
-        }
-        
-        .written-textarea {
-            border: 1px dashed #6366f1;
-            border-radius: 12px;
-            background-color: #fafafa;
-            transition: all 0.2s;
-        }
-
-        .written-textarea:focus {
-            background-color: #fff;
-            border-style: solid;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-
-        /* রেজাল্ট স্টেট */
-        .opt-correct {
-            background-color: #d1fae5 !important;
-            border-color: #10b981 !important;
-            color: #065f46 !important;
-            font-weight: 600;
-        }
-        .opt-wrong {
-            background-color: #fee2e2 !important;
-            border-color: #ef4444 !important;
-            color: #991b1b !important;
-            font-weight: 600;
-        }
-        
-        .start-panel-card { 
-            max-width: 550px; 
-            margin: 20px auto; 
-            background: #ffffff; 
-            border-radius: 24px;  
-            border: none;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08);
-        }
-
-
-        @keyframes liveDotBlink { 0% { opacity: 0.3; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); }}
-
-       .live-badge-dot {animation: liveDotBlink 1s infinite alternate ease-in-out; display: inline-flex; align-items: center;}
-        
-        /* মোবাইলের জন্য স্টিকি সাইডবারের রেসপন্সিভ পজিশন */
         @media (max-width: 991.98px) {
             .sticky-top {
                 position: fixed !important;
@@ -220,55 +106,47 @@
                 border-radius: 20px 20px 0 0 !important;
                 box-shadow: 0 -10px 20px rgba(0,0,0,0.1) !important;
                 padding: 15px !important;
+                background: #ffffff !important;
             }
             .sticky-top hr, .sticky-top p { display: none !important; }
             .sticky-top h5 { font-size: 1rem; margin-bottom: 8px !important; }
-            body { padding-bottom: 140px; } /* নিচে ফর্ম সাবমিট প্যানেলের জন্য জায়গা তৈরি করা */
+            body { padding-bottom: 140px; } 
         }
-
-
     </style>
 </head>
 <body>
 
-    <!-- 👑 মোবাইল রেসপন্সিভ টপবার হেডার -->
     <div class="exam-header-card p-3 mb-4">
         <div class="container-fluid px-1 px-sm-4 d-flex align-items-center justify-content-between gap-2">
-            
-            <!-- বাম পাশের ইনফো সেকশন -->
             <div class="d-flex align-items-center gap-2 gap-sm-3 text-start">
                 <div class="student-avatar text-white d-none d-md-flex" title="পরীক্ষার্থী">
                     <i class="bi bi-person-fill"></i>
                 </div>
                 <div>
                     <div class="d-flex align-items-center flex-wrap gap-1.5 mb-1">
-                        <span class="badge bg-white text-indigo fw-bold px-2 py-1 shadow-sm" style="color: #4f46e5; border-radius: 6px; font-size: 0.75rem; sm-font-size: 0.85rem;">উত্তরণ প্রাইভেট সেন্টার</span>
+                        <span class="badge bg-white text-indigo fw-bold px-2 py-1 shadow-sm" style="color: #4f46e5; border-radius: 6px; font-size: 0.75rem;">উত্তরণ প্রাইভেট সেন্টার</span>
                         <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 px-2 py-1 d-inline-flex align-items-center gap-1" style="font-size: 0.7rem; background-color: rgba(16, 185, 129, 0.25) !important;">
                             <span class="text-danger live-badge-dot">●</span> Live Exam
                         </span>
                     </div>
-                    <h3 class="fw-bold mb-0 text-white" id="examTitle" style="font-size: 1.15rem; sm-font-size: 1.5rem;">পরীক্ষার বিষয়</h3>
+                    <h3 class="fw-bold mb-0 text-white" id="examTitle" style="font-size: 1.15rem;">পরীক্ষার বিষয়</h3>
                     <p class="text-white-50 mb-0 d-none d-sm-block" id="examInfo" style="font-size: 0.85rem;"><i class="bi bi-info-circle"></i> প্রশ্নপত্র লোড হচ্ছে...</p>
                 </div>
             </div>
 
-            <!-- ডান পাশের টাইমার (মোবাইলেও সমান্তরাল থাকবে) -->
-            <div id="headerTimerArea" class="text-end" style="display: none; min-width: 100px; sm-min-width: 140px;">
-                <div class="text-white-50 mb-0.5 fw-semibold d-none d-sm-block" style="font-size: 0.8rem;"><i class="bi bi-clock-history"></i> অবশিষ্ট সময়</div>
+            <div id="headerTimerArea" class="text-end" style="display: none; min-width: 100px;">
+                <div class="text-white-50 mb-0.5 fw-semibold d-none d-sm-block" style="font-size: 0.8rem;"><i class="bi bi-clock-history"></i> অবশিষ্ট সময়</div>
                 <span class="badge timer-badge px-3 py-2 fw-bold text-white" id="examTimer">60:00</span>
             </div>
-            
         </div>
     </div>
 
     <div class="container pb-5">
-        <!-- লোডার -->
         <div id="examLoader" class="text-center py-5">
             <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
             <p class="mt-3 text-muted fw-semibold">সার্ভার থেকে প্রশ্নপত্র তৈরি হচ্ছে...</p>
         </div>
 
-        <!-- স্টার্ট প্যানেল -->
         <div id="startExamPanel" class="card start-panel-card p-4 text-center" style="display: none;">
             <div class="mb-3 text-primary"><i class="bi bi-rocket-takeoff fs-1 text-primary"></i></div>
             <h4 class="fw-bold text-dark mb-2" id="startPanelTitle">পরীক্ষার বিষয়</h4>
@@ -300,12 +178,9 @@
             </button>
         </div>
 
-        <!-- মূল পরীক্ষা ফর্ম -->
         <form id="examForm" style="display: none;" onsubmit="submitExam(event)">
             <div class="row g-4">
-                
                 <div class="col-lg-8">
-                    <!-- लिखित অংশ -->
                     <div class="mb-4">
                         <button class="section-header-btn" type="button" data-bs-toggle="collapse" data-bs-target="#writtenCollapse" aria-expanded="true">
                             <span class="fs-6 fs-sm-5 text-dark fw-bold"><i class="bi bi-pencil-square text-success me-2"></i> অংশ ১: লিখিত প্রশ্ন (Written Part)</span>
@@ -316,7 +191,6 @@
                         </div>
                     </div>
 
-                    <!-- MCQ অংশ -->
                     <div class="mb-4">
                         <button class="section-header-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcqCollapse" aria-expanded="false">
                             <span class="fs-6 fs-sm-5 text-dark fw-bold"><i class="bi bi-list-check text-primary me-2"></i> অংশ ২: বহুনির্বাচনী প্রশ্ন (MCQ Part)</span>
@@ -328,15 +202,13 @@
                     </div>
                 </div>
 
-                <!-- ডানপাশের স্টিকি / বটম সাইডবার -->
                 <div class="col-lg-4">
                     <div class="card p-4 border-0 sticky-top shadow-sm" style="top: 100px; z-index: 10; background: #ffffff; border-radius: 16px;">
                         <h5 class="fw-bold mb-3 text-dark d-flex align-items-center"><i class="bi bi-shield-check text-success me-2"></i> পরীক্ষার প্রগতি</h5>
                         
-                        <!-- প্রগ্রেস ট্র্যাকার -->
                         <div class="mb-3">
                             <div class="d-flex justify-content-between small text-muted mb-1">
-                                <span>MCQ উত্তর দেওয়া হয়েছে:</span>
+                                <span>MCQ উত্তর দেওয়া হয়েছে:</span>
                                 <span id="answeredCount" class="fw-bold text-primary">০</span>
                             </div>
                             <div class="progress" style="height: 8px;">
@@ -344,9 +216,9 @@
                             </div>
                         </div>
 
-                        <p class="text-secondary small bg-light p-3 rounded-3"><i class="bi bi-info-circle-fill text-warning"></i> MCQ প্রশ্নের উত্তর এখানেই সিলেক্ট করো, তবে লিখিত প্রশ্নের উত্তর খাতায় লিখে পরবর্তীতে জমা দিতে হবে।</p>
+                        <p class="text-secondary small bg-light p-3 rounded-3"><i class="bi bi-info-circle-fill text-warning"></i> লিখিত প্রশ্নের সঠিক উত্তর দেখতে প্রতিটি প্রশ্নের নিচের "উত্তর দেখুন" বাটনে ক্লিক করুন।</p>
                         <hr class="text-muted">
-                        <button type="submit" class="btn btn-indigo btn-lg w-100 fw-bold py-2.5 py-sm-3 rounded-3 shadow-sm text-white" style="background-color: #4f46e5;"> সাবমিট করুন
+                        <button type="submit" class="btn btn-indigo btn-lg w-100 fw-bold py-2.5 rounded-3 shadow-sm text-white" style="background-color: #4f46e5;"> সাবমিট করুন
                         </button>
                     </div>
                 </div>
@@ -362,7 +234,6 @@
         let timerInterval;
         let globalQuestionsData = [];
         let totalMcqQuestions = 0;
-
         window.addEventListener('DOMContentLoaded', () => { getExamQuestions(); });
 
         function getExamQuestions() {
@@ -392,16 +263,21 @@
                         
                         if(q.qType === 'written' || q.qType === 'written ') {
                             writtenCount++;
+                            // সার্ভার থেকে আসা উত্তর (q.ans না থাকলে ডিফল্ট মেসেজ)
+                            let serverAnswer = q.correctOp ? q.correctOp : "এই প্রশ্নের কোনো উত্তর সার্ভারে যুক্ত করা হয়নি।";
+
                             writtenContainer.innerHTML += `
                                 <div class="q-card">
                                     <h6 class="fw-bold mb-2 text-dark lh-base">${writtenCount}. ${q.question}</h6>
                                     ${imgHTML}
                                     <div class="mt-2">
                                         <button class="btn btn-sm btn-outline-secondary fw-semibold rounded-2 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#writtenAnsCollapse_${index}">
-                                            <i class="bi bi-pencil-square"></i> উত্তর লিখুন
+                                            <i class="bi bi-eye"></i> উত্তর দেখুন
                                         </button>
                                         <div class="collapse" id="writtenAnsCollapse_${index}">
-                                            <textarea id="ans_${index}" class="form-control written-textarea p-3" rows="4" placeholder="তোমার উত্তরটি এখানে টাইপ করতে পারো..."></textarea>
+                                            <div class="p-3 server-ans-box shadow-sm fw-medium">
+                                                <strong>সঠিক উত্তর:</strong> <span class="d-block mt-1">${serverAnswer}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -575,7 +451,7 @@
                         <div class="alert alert-success text-center fw-bold fs-5 mb-3">
                             🎯 তোমার MCQ স্কোর: ${correctMCQ} / ${totalMCQ}
                         </div>
-                        <p class="mb-0 text-center text-secondary small"><i class="bi bi-info-circle"></i> নিচে স্ক্রল করে ভুল এবং সঠিক উত্তরগুলো মিলিয়ে নাও।</p>
+                        <p class="mb-0 text-center text-secondary small"><i class="bi bi-info-circle"></i> নিচে স্ক্রল করে ভুল এবং সঠিক উত্তরগুলো মিলিয়ে নাও।</p>
                     </div>
                 `,
                 icon: 'success',
