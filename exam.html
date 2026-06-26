@@ -11,10 +11,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="jcrstyle.css">
-
     <style>
-        html, body {
+         html, body {
             margin: 0 !important;
             padding: 0 !important;
             font-family: 'Noto Sans Bengali', sans-serif;
@@ -34,7 +32,7 @@
         }
         
         .timer-badge {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -62,18 +60,18 @@
             100% { transform: scale(1.03); box-shadow: 0 0 20px rgba(239, 68, 68, 0.7); }
         }
 
+        /* লাইভ ডট ব্লিংকিং অ্যানিমেশন */
         @keyframes liveDotBlink {
-            0% { opacity: 0.2; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); }
+            0% { opacity: 0.3; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
         }
 
         .live-badge-dot {
-            animation: liveDotBlink 0.6s infinite alternate ease-in-out;
+            animation: liveDotBlink 0.8s infinite alternate ease-in-out;
             display: inline-block;
-            color: #ef4444 !important;
-            margin-right: 3px;
         }
 
+        /* পরীক্ষার্থী প্রোফাইল আইকন */
         .student-avatar {
             width: 40px;
             height: 40px;
@@ -85,16 +83,128 @@
             font-size: 1.1rem;
             border: 1px solid rgba(255, 255, 255, 0.25);
         }
-
-        /* সার্ভার থেকে আসা উত্তরের জন্য কাস্টম বক্স */
-        .server-ans-box {
-            background-color: #f0fdf4;
-            border-left: 4px solid #16a34a;
-            color: #166534;
-            font-size: 0.95rem;
-            border-radius: 4px 8px 8px 4px;
+        
+        /* সেকশন হেডার ডিজাইন */
+        .section-header-btn {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            font-weight: 700;
+            padding: 16px 20px;
+            border-radius: 16px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+        
+        .section-header-btn:not(.collapsed) {
+            background-color: #ffffff;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 3px solid #4f46e5;
+        }
+        
+        .collapse-body {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.01);
         }
 
+        @media (min-width: 576px) {
+            .collapse-body { padding: 28px; }
+        }
+        
+        /* কুইজ কার্ড */
+        .q-card {
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .q-card:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        
+        /* MCQ অপশন ইফেক্ট */
+        .mcq-option {
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.98rem;
+            background-color: #fff;
+        }
+        
+        .mcq-option:hover {
+            background-color: #f1f5f9;
+            border-color: #6366f1;
+            transform: translateY(-1px);
+        }
+        
+        .mcq-radio:checked + .mcq-option {
+            background-color: #eef2ff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px #4f46e5;
+        }
+        
+        .written-textarea {
+            border: 1px dashed #6366f1;
+            border-radius: 12px;
+            background-color: #fafafa;
+            transition: all 0.2s;
+        }
+
+        .written-textarea:focus {
+            background-color: #fff;
+            border-style: solid;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        /* রেজাল্ট স্টেট */
+        .opt-correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: 600;
+        }
+        .opt-wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            font-weight: 600;
+        }
+        
+        .start-panel-card { 
+            max-width: 550px; 
+            margin: 20px auto; 
+            background: #ffffff; 
+            border-radius: 24px;  
+            border: none;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08);
+        }
+
+
+        @keyframes liveDotBlink { 0% { opacity: 0.3; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); }}
+
+       .live-badge-dot {animation: liveDotBlink 1s infinite alternate ease-in-out; display: inline-flex; align-items: center;}
+        
+        /* মোবাইলের জন্য স্টিকি সাইডবারের রেসপন্সিভ পজিশন */
         @media (max-width: 991.98px) {
             .sticky-top {
                 position: fixed !important;
@@ -106,13 +216,22 @@
                 border-radius: 20px 20px 0 0 !important;
                 box-shadow: 0 -10px 20px rgba(0,0,0,0.1) !important;
                 padding: 15px !important;
-                background: #ffffff !important;
             }
             .sticky-top hr, .sticky-top p { display: none !important; }
             .sticky-top h5 { font-size: 1rem; margin-bottom: 8px !important; }
-            body { padding-bottom: 140px; } 
+            body { padding-bottom: 140px; } /* নিচে ফর্ম সাবমিট প্যানেলের জন্য জায়গা তৈরি করা */
         }
+                /* সার্ভার থেকে আসা উত্তরের জন্য কাস্টম বক্স */
+        .server-ans-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            color: #166534;
+            font-size: 0.95rem;
+            border-radius: 4px 8px 8px 4px;
+        }
+
     </style>
+
 </head>
 <body>
 
