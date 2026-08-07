@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oersted's Experiment - Dense Flux Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #e3e8f0;
+        }
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+        }
+        #control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            color: #333;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 300px;
+            pointer-events: auto;
+            border: 1px solid #d4d8e0;
+            z-index: 10;
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+            color: #007bff;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+        .value-display {
+            font-weight: bold;
+            color: #d9534f;
+            float: right;
+        }
+        .instruction {
+            font-size: 12px;
+            color: #555;
+            margin-top: 15px;
+            line-height: 1.4;
+            background: #f1f3f6;
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
+    <!-- Three.js লোকাল ফাইল -->
+    <script src="three.min.js"></script>
+    <!-- OrbitControls Script -->
+    <script src="OrbitControls.js"></script>
+</head>
+<body>
+
+    <div id="control-panel">
+        <h2>Oersted's Experiment</h2>
+        
+        <div class="control-group">
+            <label>Current (তড়িৎ প্রবাহ): 
+                <span id="current-val" class="value-display">0 A</span>
+            </label>
+            <input type="range" id="current-slider" min="-5" max="5" step="0.1" value="0">
+        </div>
+
+        <div class="instruction">
+            <strong>নতুন সংযোজন: Dense Flux Lines</strong><br>
+            • <strong>সবুজ বলয়:</strong> তারের চারপাশের ঘন ১৫টি বৃত্তাকার ফ্লাক্স লাইন।<br>
+            • <strong>বেগুনী লুপ:</strong> চৌম্বক শলাকার ত্রিমাত্রিক ১২টি পরাবৃত্তাকার বলরেখা।<br>
+            • কারেন্ট পরিবর্তন করলে এই ঘন ফিল্ডগুলো কীভাবে ইন্টারঅ্যাক্ট করে লক্ষ্য করুন।
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <script>
+        // --- 1. Basic Three.js Setup (Bright Environment) ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xe3e8f0);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 8);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // --- 2. Lighting ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight.position.set(5, 10, 7);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // --- 3. Base Table & Closed Circuit Setup ---
+        const baseGeo = new THREE.BoxGeometry(7, 0.2, 5);
+        const baseMat = new THREE.MeshStandardMaterial({ color: 0xd2b48c, roughness: 0.6 });
+        const base = new THREE.Mesh(baseGeo, baseMat);
+        base.position.y = -0.1;
+        base.receiveShadow = true;
+        scene.add(base);
+
+        // ব্যাটারি (DC Power Source)
+        const batGroup = new THREE.Group();
+        const batBody = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.2, 32), new THREE.MeshStandardMaterial({ color: 0x222222 }));
+        batBody.rotation.z = Math.PI / 2;
+        batGroup.add(batBody);
+        const posCap = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.15, 16), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8 }));
+        posCap.rotation.z = Math.PI / 2;
+        posCap.position.x = 0.65;
+        batGroup.add(posCap);
+        batGroup.position.set(0, 0.3, 2);
+        scene.add(batGroup);
+
+        // সার্কিট পাথ
+        const curvePath = new THREE.CurvePath();
+        const p1 = new THREE.Vector3(-2.5, 0.3, 2);
+        const p2 = new THREE.Vector3(-2.5, 0.3, 0);
+        const p3 = new THREE.Vector3(-2.5, 1.2, 0);
+        const p4 = new THREE.Vector3(-2.5, 1.2, -1.5);
+        const p5 = new THREE.Vector3(2.5, 1.2, -1.5); // মেইন তার
+        const p6 = new THREE.Vector3(2.5, 1.2, 0);
+        const p7 = new THREE.Vector3(2.5, 0.3, 0);
+        const p8 = new THREE.Vector3(2.5, 0.3, 2);
+
+        curvePath.add(new THREE.LineCurve3(p1, p2));
+        curvePath.add(new THREE.LineCurve3(p2, p3));
+        curvePath.add(new THREE.LineCurve3(p3, p4));
+        curvePath.add(new THREE.LineCurve3(p4, p5));
+        curvePath.add(new THREE.LineCurve3(p5, p6));
+        curvePath.add(new THREE.LineCurve3(p6, p7));
+        curvePath.add(new THREE.LineCurve3(p7, p8));
+        curvePath.add(new THREE.LineCurve3(p8, p1));
+
+        const wireGeo = new THREE.TubeGeometry(curvePath, 100, 0.04, 8, false);
+        const wireMat = new THREE.MeshStandardMaterial({ color: 0xcc3333, transparent: true, opacity: 0.7 });
+        const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+        scene.add(wireMesh);
+
+        // --- 4. Electrons Flow Setup ---
+        const electronCount = 60;
+        const electrons = [];
+        const electronGeo = new THREE.SphereGeometry(0.04, 8, 8);
+        const electronMat = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+
+        for (let i = 0; i < electronCount; i++) {
+            const mesh = new THREE.Mesh(electronGeo, electronMat);
+            scene.add(mesh);
+            electrons.push({ mesh: mesh, progress: i / electronCount });
+        }
+
+        // --- 5. DENSE Wires Flux Lines (তারের চারপাশের ঘন ফ্লাক্স) ---
+        const wireFluxGroup = new THREE.Group();
+        wireFluxGroup.position.set(0, 1.2, -1.5); // মেইন তারের কেন্দ্রবিন্দুতে
+        scene.add(wireFluxGroup);
+
+        // তারের ফ্লাক্স লাইনের সংখ্যা অনেক বাড়ানো হলো (১৫টি ঘন রিং)
+        const numWireFluxLines = 15;
+        const wireFluxRadii = [];
+        const wireFluxLines = [];
+
+        for(let i = 0; i < numWireFluxLines; i++) {
+            // রিংগুলোর ব্যাসার্ধ ০.১ থেকে ১.১ পর্যন্ত বিস্তৃত
+            wireFluxRadii.push(0.1 + (i * 0.07));
+        }
+
+        wireFluxRadii.forEach((radius, index) => {
+            // রিংগুলোকে আরও পাতলা করা হলো যাতে দেখতে বলরেখার মতো লাগে
+            const ringGeo = new THREE.RingGeometry(radius, radius + 0.01, 64);
+            const ringMat = new THREE.MeshBasicMaterial({ 
+                color: 0x28a745, 
+                side: THREE.DoubleSide, 
+                transparent: true, 
+                opacity: 0.8 - (index * 0.03) // বাইরের রিংগুলো ক্রমান্বয়ে হালকা হবে
+            });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.y = Math.PI / 2; // YZ তলে স্থাপন
+            wireFluxGroup.add(ring);
+            wireFluxLines.push(ring);
+        });
+
+        // --- 6. Compass Needle & DENSE Needle Flux Lines ---
+        const compassGroup = new THREE.Group();
+        compassGroup.position.set(0, 0, -1.5); // তারের ঠিক নিচে
+
+        const standBase = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+        standBase.position.y = 0.025;
+        compassGroup.add(standBase);
+
+        const standRod = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.8, 16), new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.8 }));
+        standRod.position.y = 0.4;
+        compassGroup.add(standRod);
+
+        // শলাকার পাইভোট (Pivot)
+        const needlePivot = new THREE.Group();
+        needlePivot.position.y = 0.8;
+        compassGroup.add(needlePivot);
+
+        // North Pole (লাল কোণ)
+        const northMesh = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.6, 4), new THREE.MeshStandardMaterial({ color: 0xee2222 }));
+        northMesh.rotation.x = Math.PI / 2;
+        northMesh.position.z = -0.3;
+        needlePivot.add(northMesh);
+
+        // South Pole (নীল কোণ)
+        const southMesh = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.6, 4), new THREE.MeshStandardMaterial({ color: 0x2255ee }));
+        southMesh.rotation.x = -Math.PI / 2;
+        southMesh.position.z = 0.3;
+        needlePivot.add(southMesh);
+
+        // শলাকার ফ্লাক্স লাইন গ্রুপ (ঘন লুপ)
+        const needleFluxGroup = new THREE.Group();
+        needlePivot.add(needleFluxGroup);
+
+        function createNeedleFluxLoop(scaleX, scaleZ, rotateY) {
+            const curve = new THREE.EllipseCurve(0, 0, scaleX, scaleZ, 0, 2 * Math.PI, false, 0);
+            const points = curve.getPoints(60); // আরও মসৃণ পরাবৃত্ত
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: 0x9400d3, 
+                transparent: true,
+                opacity: 0.5 - (scaleZ * 0.1) // বড় লুপগুলো ক্রমান্বয়ে হালকা
+            });
+            const line = new THREE.Line(geometry, material);
+            
+            // অনুভূমিকভাবে স্থাপন করে তারপর নির্দিষ্ট কোণে ঘোরানো
+            line.rotation.x = Math.PI / 2; 
+            line.rotation.y = rotateY; // ত্রিমাত্রিক করার জন্য Y-অক্ষে ঘোরানো
+            
+            return line;
+        }
+
+        // চৌম্বক শলাকার ফ্লাক্সের সংখ্যা অনেক বাড়ানো হলো (১২টি পরাবৃত্তাকার লুপ)
+        const numNeedleFluxLines = 12;
+        const needleFluxScales = [
+            [0.3, 0.5], [0.4, 0.6], [0.5, 0.75], [0.65, 0.9]
+        ]; // বিভিন্ন আকারের বেস লুপ
+
+        needleFluxScales.forEach(scale => {
+            for(let i = 0; i < numNeedleFluxLines; i++) {
+                // প্রতিটি আকারের লুপকে বিভিন্ন কোণে (১৮০ ডিগ্রি বা Pi রেডিয়ানের মধ্যে) ভাগ করে বসানো
+                const angle = (Math.PI / numNeedleFluxLines) * i;
+                needleFluxGroup.add(createNeedleFluxLoop(scale[0], scale[1], angle));
+            }
+        });
+
+        scene.add(compassGroup);
+
+        // --- 7. UI Controls & Logic ---
+        const currentSlider = document.getElementById('current-slider');
+        const currentValDisplay = document.getElementById('current-val');
+
+        let current = 0;
+        let targetRotation = 0;
+
+        currentSlider.addEventListener('input', (e) => {
+            current = parseFloat(e.target.value);
+            currentValDisplay.innerText = current + " A";
+            targetRotation = Math.atan(current * 0.5); 
+        });
+
+        // --- 8. Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // ১. শলাকার মসৃণ ঘূর্ণন (Lerp)
+            needlePivot.rotation.y += (targetRotation - needlePivot.rotation.y) * 0.05;
+
+            // ২. ইলেকট্রন ও তারের ফ্লাক্স লাইনের অ্যানিমেশন
+            if (Math.abs(current) > 0.05) {
+                // ইলেকট্রন দৃশ্যমান ও সচল করা
+                const speed = current * 0.002;
+                electrons.forEach(e => {
+                    e.mesh.visible = true;
+                    e.progress -= speed;
+                    if (e.progress > 1) e.progress -= 1;
+                    if (e.progress < 0) e.progress += 1;
+                    const point = curvePath.getPointAt(e.progress);
+                    if (point) e.mesh.position.copy(point);
+                });
+
+                // তারের ফ্লাক্স লাইন দৃশ্যমান করা ও ঘূর্ণন দেওয়া
+                wireFluxGroup.visible = true;
+                wireFluxLines.forEach((ring, index) => {
+                    // কারেন্টের মানের উপর ভিত্তি করে রিংগুলোর ঘূর্ণন গতি ও দিক নিয়ন্ত্রিত
+                    // ঘন ফিল্ডে ঘূর্ণনের পরিমাণ সামান্য কমানো হলো যাতে দেখতে সুবিধা হয়
+                    ring.rotation.z += current * 0.002 * (1 + index/5); 
+                });
+            } else {
+                // কারেন্ট না থাকলে ইলেকট্রন ও তারের ফ্লাক্স লাইন অদৃশ্য থাকবে
+                electrons.forEach(e => e.mesh.visible = false);
+                wireFluxGroup.visible = false;
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Window Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // শুরুতে তারের ফ্লাক্স হাইড রাখা (যেহেতু শুরুতে কারেন্ট ০)
+        wireFluxGroup.visible = false;
+
+        animate();
+    </script>
+</body>
+</html>
