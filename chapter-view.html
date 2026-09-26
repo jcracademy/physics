@@ -58,16 +58,37 @@
             padding-bottom: 12px;
             margin-bottom: 24px;
         }
-        .theory-section {
-            background: #fdfdfd;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            border-radius: 4px 12px 12px 4px;
+        
+        /* 📐 তাত্ত্বিক আলোচনার কাস্টম থ্রি-ব্লক কন্টেইনার স্টাইল */
+        .theory-container {
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        .theo-1-box {
+            padding: 18px;
+        }
+        .theo-img-box {
+            padding: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+        }
+        .theo-2-box {
+            padding: 18px;
+        }
+        @media (max-width: 767.98px) {
+            .theo-img-box {
+                border-left: none;
+                border-top: 1px solid #cbd5e1;
+            }
         }
 
         /* সমাধানকৃত উদাহরণ বক্স */
         .example-box {
-            background-color: #f0fdf4; /* হালকা গ্রিন আমেজ সফল সমাধানের জন্য */
+            background-color: #f0fdf4;
             border-left: 4px solid #22c55e;
             padding: 20px;
             border-radius: 4px 14px 14px 4px;
@@ -79,7 +100,7 @@
 
         /* প্র্যাকটিস বক্স */
         .practice-box {
-            background-color: #eff6ff; /* হালকা ব্লু আমেজ */
+            background-color: #eff6ff;
             border: 1px dashed #bfdbfe;
             padding: 18px;
             border-radius: 12px;
@@ -96,7 +117,7 @@
             border-radius: 18px;
             padding: 22px;
             margin-bottom: 24px;
-            box-shadow: var(--widget-widget-shadow);
+            box-shadow: var(--widget-shadow);
         }
         .widget-title {
             font-size: 16px;
@@ -176,7 +197,7 @@
             color: white;
         }
 
-        /* বড় স্ক্রিনে সাইডবার স্টিকি থাকবে */
+        /* বড় স্ক্রিনে সাইডবার স্টিকি থাকবে */
         @media (min-width: 992px) {
             .sticky-sidebar {
                 position: sticky;
@@ -218,7 +239,7 @@
             <div class="row g-4">
                 
                 <div class="col-lg-9">
-                    <div class="alert guideline-box border-0 p-4 mb-4" role="alert">
+                    <div class="alert guideline-box border-0 p-2 mb-4" role="alert">
                         <strong class="d-block mb-1 text-primary text-uppercase small tracking-wide"><i class="bi bi-info-circle-fill"></i> স্টাডি গাইডলাইন:</strong>
                         <span id="instructionText" class="text-secondary">প্রথমে সংক্ষিপ্ত তত্ত্বটি ভালো করে পড়ে উদাহরণ দুটি খাতায় সমাধান করো। এরপর প্র্যাকটিস সমস্যাগুলো নিজে সমাধান করার চেষ্টা করো।</span>
                     </div>
@@ -274,7 +295,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // জাভাস্ক্রিপ্ট লজিক আগের মতই নিখুঁত রাখা হয়েছে শুধু কন্টেন্ট রেন্ডারিং ক্লাসে কিছু প্রিমিয়াম কার্ডের স্টাইল বুস্ট করা হয়েছে।
         const urlParams = new URLSearchParams(window.location.search);
         const className = urlParams.get('class') || 'hsc';
         const chapterId = urlParams.get('ch');
@@ -313,6 +333,69 @@
                 if (typeDataResponse.result === "success" && typeDataResponse.types.length > 0) {
                     typeDataResponse.types.forEach((type) => {
                         
+                        // ১. theo_1, theo_2 এবং theo_img ডাটা এক্সট্র্যাকশন (ব্যাকওয়ার্ড কম্প্যাটিবিলিটিসহ)
+                        const theo1 = type.theo_1 || type.theory || "";
+                        const theo2 = type.theo_2 || "";
+                        const theoImg = type.theo_img || "";
+
+                        let theoryContent = "";
+
+                        // কেস A: theo_1, theo_2 এবং theo_img তিনটিই আছে (ছবি অনুযায়ী লেআউট)
+                        if (theo1 && theo2 && theoImg) {
+                            theoryContent = `
+                                <div class="theory-container mb-3 shadow-sm">
+                                    <div class="row g-0">
+                                        <div class="col-12 col-md-7 theo-1-box">
+                                            <div class="text-dark lh-lg fw-semibold">${theo1}</div>
+                                        </div>
+                                        <div class="col-12 col-md-5 theo-img-box">
+                                            <img src="${theoImg}" class="img-fluid rounded" style="width: 100%; flex: 1 1 auto; object-fit: contain; min-height: 160px;" alt="Theory Image">
+                                        </div>
+                                    </div>
+                                    <div class="row g-0">
+                                        <div class="col-12 theo-2-box">
+                                            <div class="text-dark lh-lg fw-semibold">${theo2}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } 
+                        // কেস B: শুধু theo_1 এবং theo_img আছে
+                        else if (theo1 && theoImg && !theo2) {
+                            theoryContent = `
+                                <div class="theory-container mb-3 shadow-sm">
+                                    <div class="row g-0">
+                                        <div class="col-12 col-md-7 theo-1-box">
+                                            <div class="text-dark lh-lg fw-semibold">${theo1}</div>
+                                        </div>
+                                        <div class="col-12 col-md-5 theo-img-box">
+                                            <img src="${theoImg}" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" alt="Theory Image">
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } 
+                        // কেস C: শুধু theo_1 এবং theo_2 আছে (ছবি নেই)
+                        else if (theo1 && theo2 && !theoImg) {
+                            theoryContent = `
+                                <div class="theory-container mb-3 shadow-sm">
+                                    <div class="theo-1-box">
+                                        <div class="text-dark lh-lg fw-semibold">${theo1}</div>
+                                    </div>
+                                    <div class="theo-2-box">
+                                        <div class="text-dark lh-lg fw-semibold">${theo2}</div>
+                                    </div>
+                                </div>
+                            `;
+                        } 
+                        // কেস D: শুধু theo_1 আছে (theo_2 এবং theo_img নেই)
+                        else {
+                            theoryContent = `
+                                <div class="text-dark lh-lg theory-section fw-semibold mb-3">${theo1}</div>
+                            `;
+                        }
+
+                        // ২. প্র্যাকটিস প্রশ্নের HTML প্রসেসিং
                         let practiceHTML = "";
                         if(type.practiceQuestions && type.practiceQuestions.length > 0) {
                             type.practiceQuestions.forEach(pq => {
@@ -326,6 +409,7 @@
                             });
                         }
 
+                        // ৩. উদাহরণ ১ ও ২ এর কন্টেন্ট প্রসেসিং
                         let example1Content = type.example1Img ? `
                             <div class="row g-3 align-items-center">
                                 <div class="col-12 col-md-7">
@@ -352,6 +436,30 @@
                             </div>
                         ` : `<div class="text-dark lh-base fw-medium">${type.example2}</div>`;
 
+                        let example3HTML = "";
+                        if (type.example3 && type.example3.trim() !== "") {
+                            let example3Content = type.example3Img ? `
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-12 col-md-7">
+                                        <div class="text-dark lh-base fw-medium">${type.example3}</div>
+                                    </div>
+                                    <div class="col-12 col-md-5 text-center">
+                                        <div class="bg-white p-2 border rounded shadow-sm">
+                                            <img src="${type.example3Img}" class="img-fluid rounded" style="max-height: 220px; width: 100%; object-fit: contain;" alt="Diagram 3">
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : `<div class="text-dark lh-base fw-medium">${type.example3}</div>`;
+
+                            example3HTML = `
+                                <div class="example-box shadow-sm example3Div">
+                                    <span class="badge example-badge mb-2">উদাহরণ ০৩</span>
+                                    ${example3Content}
+                                </div>
+                            `;
+                        }
+
+                        // ৪. টাইপ কার্ডের মূল HTML ব্লক
                         const typeHtml = `
                             <div class="type-card shadow-sm">
                                 <div class="type-header d-flex justify-content-between align-items-center">
@@ -360,7 +468,7 @@
                                 
                                 <div class="mb-4">
                                     <h6 class="fw-bold text-uppercase text-muted small mb-2"><i class="bi bi-journal-text"></i> সংক্ষিপ্ত তত্ত্ব & সূত্র</h6>
-                                    <div class="text-dark lh-lg theory-section fw-semibold">${type.theory}</div>
+                                    ${theoryContent}
                                 </div>
                                 
                                 <div class="mb-4">
@@ -374,6 +482,7 @@
                                             <span class="badge example-badge mb-2">উদাহরণ ০২</span>
                                             ${example2Content}
                                         </div>
+                                        ${example3HTML}
                                     </div>
                                 </div>
 
@@ -386,8 +495,6 @@
 
                         typesContainer.innerHTML += typeHtml;
                     });
-                } else {
-                    typesContainer.innerHTML = "<p class='text-muted text-center py-5 bg-white rounded-4 shadow-sm border'>এই অধ্যায়ের কোনো গাণিতিক টাইপ নোট যুক্ত করা হয়নি।</p>";
                 }
 
                 const sidebarList = document.getElementById('sidebarChaptersList');
