@@ -304,6 +304,52 @@
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTXhfGSa8Eanzxp9ltJNj8v7iEWeOy1R_n7ABN_awl7Tf_0D54OY8vjVZRThMjc0C9/exec";
 
+        // ডাইনামিক উদাহরণ ব্লক জেনারেটর ফাংশন
+        function renderExampleBlock(exNumTitle, ex1, ex2, exImg) {
+            if (!ex1 && !ex2) return ""; // ডাটা না থাকলে কিছুই দেখাবে না
+
+            let topPart = "";
+            
+            if (ex1 && exImg) {
+                // ২ টি কলাম: বামে ex1, ডানে exImg
+                topPart = `
+                    <div class="row g-3 align-items-center mb-2">
+                        <div class="col-12 col-md-7">
+                            <div class="text-dark lh-base fw-medium">${ex1}</div>
+                        </div>
+                        <div class="col-12 col-md-5 text-center">
+                            <div class="bg-white p-2 border rounded shadow-sm">
+                                <img src="${exImg}" class="img-fluid rounded" style="max-height: 220px; width: 100%; object-fit: contain;" alt="Diagram">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (ex1) {
+                // শুধু ex1
+                topPart = `<div class="text-dark lh-base fw-medium mb-2">${ex1}</div>`;
+            } else if (exImg) {
+                // শুধু চিত্র
+                topPart = `
+                    <div class="text-center mb-2">
+                        <div class="bg-white p-2 border rounded shadow-sm d-inline-block">
+                            <img src="${exImg}" class="img-fluid rounded" style="max-height: 220px; width: 100%; object-fit: contain;" alt="Diagram">
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ex2 পুরো প্রস্থে নিচে বসবে
+            let bottomPart = ex2 ? `<div class="text-dark lh-base fw-medium mt-2">${ex2}</div>` : "";
+
+            return `
+                <div class="example-box shadow-sm mb-3">
+                    <span class="badge example-badge mb-2">${exNumTitle}</span>
+                    ${topPart}
+                    ${bottomPart}
+                </div>
+            `;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const formattedClass = className.toUpperCase();
             const formattedPaper = chapterId && chapterId.includes("2nd") ? "২য় পত্র" : "১ম পত্র";
@@ -336,14 +382,13 @@
                 if (typeDataResponse.result === "success" && typeDataResponse.types.length > 0) {
                     typeDataResponse.types.forEach((type) => {
                         
-                        // ১. theo_1, theo_2 এবং theo_img ডাটা এক্সট্র্যাকশন (ব্যাকওয়ার্ড কম্প্যাটিবিলিটিসহ)
+                        // ১. theo_1, theo_2 এবং theo_img ডাটা এক্সট্র্যাকশন
                         const theo1 = type.theo_1 || type.theory || "";
                         const theo2 = type.theo_2 || "";
                         const theoImg = type.theo_img || "";
 
                         let theoryContent = "";
 
-                        // কেস A: theo_1, theo_2 এবং theo_img তিনটিই আছে (ছবি অনুযায়ী লেআউট)
                         if (theo1 && theo2 && theoImg) {
                             theoryContent = `
                                 <div class="theory-container mb-3 shadow-sm">
@@ -362,9 +407,7 @@
                                     </div>
                                 </div>
                             `;
-                        } 
-                        // কেস B: শুধু theo_1 এবং theo_img আছে
-                        else if (theo1 && theoImg && !theo2) {
+                        } else if (theo1 && theoImg && !theo2) {
                             theoryContent = `
                                 <div class="theory-container mb-3 shadow-sm">
                                     <div class="row g-0">
@@ -377,9 +420,7 @@
                                     </div>
                                 </div>
                             `;
-                        } 
-                        // কেস C: শুধু theo_1 এবং theo_2 আছে (ছবি নেই)
-                        else if (theo1 && theo2 && !theoImg) {
+                        } else if (theo1 && theo2 && !theoImg) {
                             theoryContent = `
                                 <div class="theory-container mb-3 shadow-sm">
                                     <div class="theo-1-box">
@@ -390,9 +431,7 @@
                                     </div>
                                 </div>
                             `;
-                        } 
-                        // কেস D: শুধু theo_1 আছে (theo_2 এবং theo_img নেই)
-                        else {
+                        } else {
                             theoryContent = `
                                 <div class="text-dark lh-lg theory-section fw-semibold mb-3">${theo1}</div>
                             `;
@@ -412,55 +451,23 @@
                             });
                         }
 
-                        // ৩. উদাহরণ ১ ও ২ এর কন্টেন্ট প্রসেসিং
-                        let example1Content = type.example1Img ? `
-                            <div class="row g-3 align-items-center">
-                                <div class="col-12 col-md-7">
-                                    <div class="text-dark lh-base fw-medium">${type.example1}</div>
-                                </div>
-                                <div class="col-12 col-md-5 text-center">
-                                    <div class="bg-white p-2 border rounded shadow-sm">
-                                        <img src="${type.example1Img}" class="img-fluid rounded" style="max-height: 220px; width: 100%; object-fit: contain;" alt="Diagram 1">
-                                    </div>
-                                </div>
-                            </div>
-                        ` : `<div class="text-dark lh-base fw-medium">${type.example1}</div>`;
+                        // ৩. উদাহরণ ১, ২ ও ৩-এর জন্য কাস্টম লেআউট প্রস্তুতকরণ
+                        // (নতুন ডাটা ফিল্ড: example1_1, example1_2 / পুরাতন ডাটার জন্য ব্যাকওয়ার্ড কম্প্যাটিবিলিটি)
+                        const ex1_1 = type.example1_1 || type.example1 || "";
+                        const ex1_2 = type.example1_2 || "";
+                        const ex1Img = type.example1Img || "";
 
-                        let example2Content = type.example2Img ? `
-                            <div class="row g-3 align-items-center">
-                                <div class="col-12 col-md-7">
-                                    <div class="text-dark lh-base fw-medium">${type.example2}</div>
-                                </div>
-                                <div class="col-12 col-md-5 text-center">
-                                    <div class="bg-white p-2 border rounded shadow-sm">
-                                        <img src="${type.example2Img}" class="img-fluid rounded" style="max-height: 220px; width: 100%; object-fit: contain;" alt="Diagram 2">
-                                    </div>
-                                </div>
-                            </div>
-                        ` : `<div class="text-dark lh-base fw-medium">${type.example2}</div>`;
+                        const ex2_1 = type.example2_1 || type.example2 || "";
+                        const ex2_2 = type.example2_2 || "";
+                        const ex2Img = type.example2Img || "";
 
-                        let example3HTML = "";
-                        if (type.example3 && type.example3.trim() !== "") {
-                            let example3Content = type.example3Img ? `
-                                <div class="row g-3 align-items-center">
-                                    <div class="col-12 col-md-7">
-                                        <div class="text-dark lh-base fw-medium">${type.example3}</div>
-                                    </div>
-                                    <div class="col-12 col-md-5 text-center">
-                                        <div class="bg-white p-2 border rounded shadow-sm">
-                                            <img src="${type.example3Img}" class="img-fluid rounded" style="max-height: 220px; width: 100%; object-fit: contain;" alt="Diagram 3">
-                                        </div>
-                                    </div>
-                                </div>
-                            ` : `<div class="text-dark lh-base fw-medium">${type.example3}</div>`;
+                        const ex3_1 = type.example3_1 || type.example3 || "";
+                        const ex3_2 = type.example3_2 || "";
+                        const ex3Img = type.example3Img || "";
 
-                            example3HTML = `
-                                <div class="example-box shadow-sm example3Div">
-                                    <span class="badge example-badge mb-2">উদাহরণ ০৩</span>
-                                    ${example3Content}
-                                </div>
-                            `;
-                        }
+                        let example1HTML = renderExampleBlock("উদাহরণ ০১", ex1_1, ex1_2, ex1Img);
+                        let example2HTML = renderExampleBlock("উদাহরণ ০২", ex2_1, ex2_2, ex2Img);
+                        let example3HTML = renderExampleBlock("উদাহরণ ০৩", ex3_1, ex3_2, ex3Img);
 
                         // ৪. টাইপ কার্ডের মূল HTML ব্লক
                         const typeHtml = `
@@ -476,15 +483,9 @@
                                 
                                 <div class="mb-4">
                                     <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-check-circle-fill text-success"></i> সমাধানকৃত উদাহরণসমূহ</h6>
-                                    <div class="d-flex flex-column gap-3">
-                                        <div class="example-box shadow-sm">
-                                            <span class="badge example-badge mb-2">উদাহরণ ০১</span>
-                                            ${example1Content}
-                                        </div>
-                                        <div class="example-box shadow-sm">
-                                            <span class="badge example-badge mb-2">উদাহরণ ০২</span>
-                                            ${example2Content}
-                                        </div>
+                                    <div class="d-flex flex-column">
+                                        ${example1HTML}
+                                        ${example2HTML}
                                         ${example3HTML}
                                     </div>
                                 </div>
