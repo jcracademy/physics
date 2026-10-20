@@ -20,193 +20,67 @@
             --widget-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
         }
 
-        body {
-            font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-            min-height: 100vh;
-        }
+        body { font-family: 'Noto Sans Bengali', 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; min-height: 100vh;}
+        .content-nav {  background: var(--dark-gradient); backdrop-filter: blur(10px);  border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .guideline-box {background-color: #ffffff; border-left: 5px solid #3b82f6; border-radius: 14px; box-shadow: var(--card-shadow); }
 
-        /* টপ নেভিগেশন বার */
-        .content-nav {
-            background: var(--dark-gradient);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        /* স্টাডি গাইডলাইন অ্যালার্ট */
-        .guideline-box {
-            background-color: #ffffff;
-            border-left: 5px solid #3b82f6;
-            border-radius: 14px;
-            box-shadow: var(--card-shadow);
-        }
-
-        /* টাইপ বক্সের ডিজাইন */
         .type-card {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 35px;
-            box-shadow: var(--card-shadow);
-            position: relative;
+            background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px;  padding: 30px;  margin-bottom: 35px; box-shadow: var(--card-shadow); position: relative;
         }
-        .type-header {
-            font-weight: 800;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-        }
+        .type-header { font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 24px;}
         
-        /* 📐 তাত্ত্বিক আলোচনার কাস্টম থ্রি-ব্লক কন্টেইনার স্টাইল */
-        .theory-container {
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-            overflow: hidden;
-            background-color: #ffffff;
-        }
-        .theo-1-box {
-            padding: 18px;
-        }
-        .theo-img-box {
-            padding: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8fafc;
-        }
-        .theo-2-box {
-            padding: 18px;
-        }
+        .theory-container {  border: 1px solid #cbd5e1;  border-radius: 12px; overflow: hidden; background-color: #ffffff;}
+        .theo-1-box { padding: 18px;}
+        .theo-img-box { padding: 2px; display: flex; align-items: center;justify-content: center;  background-color: #f8fafc;}
+
+        .theo-2-box { padding: 18px;}
+        .ansContainer{display: flex;flex-direction: row;}
+        .div_1{width: 50%; order: 1;}
+        .div_2{width: 50%; order: 2; border-left: 1px solid black; padding-left: 10px;}
+
         @media (max-width: 767.98px) {
-            .theo-img-box {
-                border-left: none;
-                border-top: 1px solid #cbd5e1;
-            }
+            .theo-img-box { border-left: none; border-top: 1px solid #cbd5e1;}
             .type-card { padding: 30px 5px;}
             .theo-1-box {padding: 18px 5px;}
             .theo-2-box {padding: 18px 5px;}
+            .ansContainer{display: flex;flex-direction: column;}
+            .div_1{width: 100%; order: 2;}
+            .div_2{width: 100%; order: 1; padding: initial; border: none;}
         }
+        .example-box { background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 10px; border-radius: 4px 14px 14px 4px; }
+        .example-badge { background: #22c55e !important; font-weight: 600;}
 
-        /* সমাধানকৃত উদাহরণ বক্স */
-        .example-box {
-            background-color: #f0fdf4;
-            border-left: 4px solid #22c55e;
-            padding: 20px;
-            border-radius: 4px 14px 14px 4px;
-        }
-        .example-badge {
-            background: #22c55e !important;
-            font-weight: 600;
-        }
-
-        /* প্র্যাকটিস বক্স */
-        .practice-box {
-            background-color: #eff6ff;
-            border: 1px dashed #bfdbfe;
-            padding: 18px;
-            border-radius: 12px;
-            transition: transform 0.2s;
-        }
-        .practice-box:hover {
-            transform: scale(1.01);
-        }
+        .practice-box { background-color: #eff6ff; border: 1px dashed #bfdbfe; padding: 10px; border-radius: 12px; transition: transform 0.2s;}
+        .practice-box:hover {transform: scale(1.01);}
         
-        /* 📦 প্রফেশনাল সাইডবার উইজেট সিস্টেম */
         .sidebar-widget {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 22px;
-            margin-bottom: 24px;
-            box-shadow: var(--widget-shadow);
+            background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px;  padding: 22px;  margin-bottom: 24px; box-shadow: var(--widget-shadow);
         }
-        .widget-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #0f172a;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 10px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .widget-title { font-size: 16px; font-weight: 700; color: #0f172a;  border-bottom: 2px solid #f1f5f9;  padding-bottom: 10px;  margin-bottom: 16px; display: 
+            flex; align-items: center;  gap: 10px;
         }
         .sidebar-link {
-            display: block;
-            color: #475569;
-            text-decoration: none;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.25s ease;
+            display: block; color: #475569; text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 600;  font-size: 14px;  transition: all 0.25s ease;
         }
-        .sidebar-link:hover {
-            background-color: #f1f5f9;
-            color: #1d4ed8;
-            padding-left: 18px;
-        }
+        .sidebar-link:hover {  background-color: #f1f5f9; color: #1d4ed8;  padding-left: 18px; }
         .sidebar-link.active-ch {
-            background: var(--primary-gradient);
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+            background: var(--primary-gradient); color: #ffffff !important; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
         }
 
-        /* অন্যান্য কোর্সের ব্যাজ স্টাইল */
         .subject-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px dashed #e2e8f0;
-            font-size: 14px;
-            font-weight: 600;
-            color: #334155;
+            display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0;   font-size: 14px; font-weight: 600; color: #334155;
         }
-        .subject-icon {
-            width: 32px;
-            height: 32px;
-            background-color: #f1f5f9;
-            color: #3b82f6;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
+        .subject-icon {  width: 32px; height: 32px;  background-color: #f1f5f9;  color: #3b82f6;  border-radius: 8px;  display: flex;  align-items: 
+            center; justify-content: center; font-size: 14px;
         }
-
-        /* হোয়াটসঅ্যাপ বাটন */
         .whatsapp-btn {
-            background: linear-gradient(135deg, #25D366, #1ebd54);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-            box-shadow: 0 8px 16px rgba(37, 211, 102, 0.2);
-            transition: all 0.3s;
+            background: linear-gradient(135deg, #25D366, #1ebd54); color: white; border: none; width: 100%; padding: 14px;  border-radius: 12px; font-weight: 700; display: flex;
+            align-items: center; justify-content: center; gap: 8px; text-decoration: none; box-shadow: 0 8px 16px rgba(37, 211, 102, 0.2); transition: all 0.3s;
         }
-        .whatsapp-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(37, 211, 102, 0.3);
-            color: white;
-        }
+        .whatsapp-btn:hover {  transform: translateY(-2px); box-shadow: 0 12px 20px rgba(37, 211, 102, 0.3); color: white; }
 
         /* বড় স্ক্রিনে সাইডবার স্টিকি থাকবে */
-        @media (min-width: 992px) {
-            .sticky-sidebar {
-                position: sticky;
-                top: 100px;
-            }
-        }
+        @media (min-width: 992px) {.sticky-sidebar {  position: sticky; top: 100px; }}
     </style>
 </head>
 <body>
@@ -214,8 +88,8 @@
     <nav class="navbar content-nav py-3 sticky-top shadow-sm">
         <div class="container d-flex align-items-center justify-content-between">
             <div>
-                <a class="btn btn-sm btn-outline-light fw-bold px-3 py-2 rounded-3 border-opacity-20" href="dashboard.html">
-                    <i class="bi bi-arrow-left"></i> ড্যাশবোর্ড
+                <a class="btn btn-sm btn-outline-light fw-bold px-2 px-md-3 py-2 rounded-3 border-opacity-20" href="dashboard.html" aria-label="Dashboard"
+                  title="Dashboard"> <i class="bi bi-arrow-left"></i><span class="d-none d-md-inline">Dashboard</span>
                 </a>
             </div>
             
@@ -225,8 +99,8 @@
             </div>
             
             <div>
-                <button onclick="sessionStorage.clear(); window.location.href='index.html';" class="btn btn-sm btn-danger fw-bold px-3 py-2 rounded-3">
-                    লগআউট <i class="bi bi-box-arrow-right"></i>
+                <button onclick="sessionStorage.clear(); window.location.href='index.html';" class="btn btn-sm btn-outline-light fw-bold px-2 px-md-3 py-2 rounded-3"
+                    aria-label="Log out" title="Log out"> <span class="d-none d-md-inline">Log out </span><i class="bi bi-box-arrow-right"></i>
                 </button>
             </div>
         </div>
@@ -415,7 +289,7 @@
                                             <div class="text-dark lh-lg fw-semibold">${theo1}</div>
                                         </div>
                                         <div class="col-12 col-md-5 theo-img-box">
-                                            <img src="${theoImg}" class="img-fluid rounded" style="max-height: 250px; object-fit: contain;" alt="Theory Image">
+                                            <img src="${theoImg}" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" alt="Theory Image">
                                         </div>
                                     </div>
                                 </div>
